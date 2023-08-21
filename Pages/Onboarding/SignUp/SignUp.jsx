@@ -60,6 +60,7 @@ export const SignUp = ({navigation}) => {
         autoFocus
         containerStyle={styles.inputContainer}
         textInputStyle={styles.inputText}
+        textContainerStyle={{backgroundColor: '#fff'}}
           />
           {showMessage && (
             <View style={styles.message}>
@@ -111,6 +112,7 @@ export const SignUp = ({navigation}) => {
 const styles = StyleSheet.create({
     container: {
       flex: 1,
+      backgroundColor: '#fff',
     },
     AlignCenter:{
       display:"flex",
@@ -127,6 +129,7 @@ const styles = StyleSheet.create({
         borderColor: 'grey',
         borderBottomWidth: 0.5,
         marginBottom: 20,
+      
         
       },
     input: {
@@ -136,6 +139,7 @@ const styles = StyleSheet.create({
       borderBottomWidth:0.5,
       marginBottom: 20,
       paddingHorizontal: 10,
+     
       
      
     },

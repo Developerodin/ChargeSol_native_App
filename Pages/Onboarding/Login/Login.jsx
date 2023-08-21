@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import { View, TextInput, StyleSheet, Image, ScrollView } from 'react-native'
 import bg from "../Images/LoginBG.png"
 import {  Block, Text, Input, theme,Button} from 'galio-framework';
+import { NavigationActions } from '@react-navigation/native';
+import { StatusBar } from 'expo-status-bar';
 export const Login = ({navigation}) => {
   const initalValues={
     username: '',
@@ -13,7 +15,7 @@ export const Login = ({navigation}) => {
       const handleLogin = () => {
         if (formData.username === 'admin' && formData.password === 'admin') {
           setFormData(initalValues);
-          navigation.navigate('Home');
+          navigation.navigate('Tabs');
         } else {
           setFormData({ ...formData, errorMessage: 'Invalid username or password' });
         }
@@ -29,7 +31,7 @@ export const Login = ({navigation}) => {
 
   return (
      <Block  style={styles.container}>
-      
+      <StatusBar style="auto" />
       <Block style={{padding:15,marginTop:30}}>
       <TextInput
         style={styles.input}
@@ -69,6 +71,7 @@ export const Login = ({navigation}) => {
 const styles = StyleSheet.create({
     container: {
       flex: 1,
+      backgroundColor: '#fff',
     },
     AlignCenter:{
       display:"flex",
