@@ -102,12 +102,12 @@ export default function App() {
   }
 
   useEffect(()=>{
-    requestLocationPermission();
+    // requestLocationPermission();
   })
   
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Tabs">
+      <Stack.Navigator initialRouteName="Login">
         {/* <Stack.Screen name="Home" component={Home}
         options={{
           headerShown: false,

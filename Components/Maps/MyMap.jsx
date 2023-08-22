@@ -6,10 +6,9 @@ import { StatusBar } from 'expo-status-bar';
 import Icon from "./Icons/IconM.png"
 import Car from "./Icons/CarLocationIcon.png"
 import Geolocation from 'react-native-geolocation-service';
-import * as Location from 'expo-location';
 import MapView, { Marker,Polyline,PROVIDER_GOOGLE } from 'react-native-maps';
-
-
+import { Dimensions } from "react-native";
+import * as Location from 'expo-location';
 const InitialChargerData=[
  
   {StaionID:"46",lat:26.8248938,lng:75.7217989,title:"Highway King Bhankrota",icon:Icon,Rating:"3.5",Status:"Available",Place:"Bhankrota",Distance:"5 km",Reviews:"22",travelTime:"42"},
@@ -41,6 +40,8 @@ const customMarkers = [
 export const MyMap = ({navigation}) => {
 
   const [UserLocation, setUserLocation] = useState(false);
+  const [location, setLocation] = useState(null);
+  const [errorMsg, setErrorMsg] = useState(null);
   const [selectedMarker, setSelectedMarker] = useState(null);
 
   async function getCurrentLocation() {
@@ -82,12 +83,38 @@ export const MyMap = ({navigation}) => {
   };
   
   useEffect(() => {
-    // Get the current device location
-    getCurrentLocation()
+    (async () => {
+      
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        setErrorMsg('Permission to access location was denied');
+        return;
+      }
+
+      let location = await Location.getCurrentPositionAsync({});
+      setLocation(location);
+      console.log("UserLocation==>",location);
+      const { latitude, longitude } = location.coords;
+      setUserLocation({
+        latitude,
+        longitude,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421,
+      });
+    })();
   }, []);
+
+  let text = 'Waiting..';
+  if (errorMsg) {
+    text = errorMsg;
+  } else if (location) {
+    text = JSON.stringify(location);
+  }
   return (
+      // "apiKey": "AIzaSyBKPYoMWGdRfZsZlYwwFC00xx0LAr8snyo"
       
     <MapView style={styles.map} initialRegion={UserLocation} provider={PROVIDER_GOOGLE}  >
+      {/* <MapView style={styles.map}/> */}
     {UserLocation && (
       <Marker
         coordinate={UserLocation}
@@ -105,7 +132,7 @@ export const MyMap = ({navigation}) => {
           longitude: marker.lng,
         }}
         title={marker.title}
-        onPress={() => handleMarkerPress(marker)}
+        // onPress={() => handleMarkerPress(marker)}
       >
         <Image source={marker.icon} style={{ width: 25, height: 35 }} />
       </Marker>
@@ -128,16 +155,13 @@ export const MyMap = ({navigation}) => {
     )}
   </MapView>
 
-  
-
-      
   )
 }
 
 
 const styles = StyleSheet.create({
   map: {
-    width: '100%',
-    height: '100%',
-  }
+    ...StyleSheet.absoluteFillObject,
+    height: Dimensions.get("window").height,
+},
   });

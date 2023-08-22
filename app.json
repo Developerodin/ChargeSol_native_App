@@ -9,8 +9,16 @@
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#FFF"
     },
+    "plugins": [
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Allow $(ChargeSol_App) to use your location."
+        }
+      ]
+    ],
     "assetBundlePatterns": [
       "**/*"
     ],
@@ -20,7 +28,8 @@
     "android": {
       "config": {
         "googleMaps": {
-          "apiKey": "AIzaSyBKPYoMWGdRfZsZlYwwFC00xx0LAr8snyo"
+          
+          "apiKey":"AIzaSyDP5tt8aCvabaJ5nBlOGS2OTJoUasYvKvk"
         }
       },
       "adaptiveIcon": {

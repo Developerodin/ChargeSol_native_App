@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Button, Image, StyleSheet,Text, View } from 'react-native'
 
 import { StatusBar } from 'expo-status-bar';
@@ -38,9 +38,12 @@ const customMarkers = [
 ];
 
 export const Home = ({ navigation }) => {
+  useEffect(()=>{
+console.log("In Home ")
+  },[])
   return (
     <View style={styles.container}>
-      {/* <Text>Home Screen</Text> */}
+      {/* <Text style={{borderWidth:1,borderColor:"red",zIndex:10,marginTop:30}}>Home Screen</Text> */}
       <MyMap navigation={navigation}/>
       <StatusBar style="auto" />
     </View>
