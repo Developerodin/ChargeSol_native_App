@@ -5,6 +5,7 @@ import { StatusBar } from 'expo-status-bar';
 import MapView, { Marker } from 'react-native-maps';
 import Icon from "./Icons/IconM.png"
 import { MyMap } from '../../Components/Maps/MyMap';
+import { LoginModel } from '../../Components/LoginModel/LoginModel';
 
 const InitialChargerData=[
   {StaionID:"48",lat:26.833408,lng:75.7141464,title:"Highway King Neemrana",icon:Icon,Rating:"4.5",Status:"Available",Place:"Neemrana",Distance:"10 km",Reviews:"23",travelTime:"18"},
@@ -46,6 +47,7 @@ console.log("In Home ")
       {/* <Text style={{borderWidth:1,borderColor:"red",zIndex:10,marginTop:30}}>Home Screen</Text> */}
       <MyMap navigation={navigation}/>
       <StatusBar style="auto" />
+      {/* <LoginModel /> */}
     </View>
   )
 }

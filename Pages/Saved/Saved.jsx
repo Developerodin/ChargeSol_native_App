@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { ScrollView, StyleSheet,Dimensions} from 'react-native'
+import React, { useEffect, useState } from 'react'
+import { ScrollView, StyleSheet,Dimensions, View, Image} from 'react-native'
 import { Block,theme,Button ,Text} from 'galio-framework';
 import { ChargerCard } from '../../Components/Cards/ChargerCard';
 import star from "../CarImages/images/starimage.png"
@@ -7,7 +7,11 @@ import Sicon from "../CarImages/images/sicon.png"
 import TataIcon from "../CarImages/images/tataicon.png"
 import AcIcon from "../CarImages/images/aciocn.png"
 import DcIcon from "../CarImages/images/dcicon.png"
-const { width } = Dimensions.get('screen');
+import { LoginModel } from '../../Components/LoginModel/LoginModel';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useAppContext } from '../../Context/AppContext';
+
+const { width,height } = Dimensions.get('screen');
 const thumbMeasure = (width - 48 - 32) / 3;
 const InitialChargerData=[
   {StaionID:"48",lat:26.833408,lng:75.7141464,title:"Highway King Neemrana",icon:"assets/icon/IconM.gif",Rating:"4.5",Status:"Available",Place:"Neemrana",Distance:"10 km",Reviews:"23",travelTime:"18"},
@@ -20,9 +24,14 @@ const InitialChargerData=[
   {StaionID:"64",lat:29.0588,lng:76.0856,title:"Highway King Haryana",icon:"assets/icon/IconM.png",Rating:"1.5",Status:"Available",Place:"Haryana",Distance:"94 km",Reviews:"27",travelTime:"44"},
 ]
 export const Saved = () => {
-  const [Data,setData]= useState(InitialChargerData)
+  const [Data,setData]= useState(InitialChargerData);
+  const {isLoggedIn,modalVisible,selectedTabs} = useAppContext();
+ 
   return (
-   <ScrollView style={[styles.container]}>
+    <View style={[styles.container]}>
+      {/* {
+        isLoggedIn ?  */}
+        <ScrollView style={[styles.container]}>
       <Block style={{marginBottom:90}}>
         {
           Data.map((el,index)=>{
@@ -34,6 +43,10 @@ export const Saved = () => {
         
       </Block>
    </ScrollView>
+  {!isLoggedIn && modalVisible && selectedTabs==="Saved" && <LoginModel />} 
+         
+    </View>
+   
   )
 }
 

@@ -1,5 +1,5 @@
 import { Block,theme,Button ,Text} from 'galio-framework';
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Image, ScrollView, StyleSheet, View,Dimensions } from 'react-native'
 import walletcard from '../CarImages/walletcard.png'
 import { SamllCards } from '../../Components/Cards/SamllCards';
@@ -8,11 +8,19 @@ import Exchange from '../CarImages/Exchange.png'
 import Transfer from '../CarImages/Transfer.png'
 import referImg from '../CarImages/referImg.png'
 import copyicon from '../CarImages/copyicon.png'
+import { LoginModel } from '../../Components/LoginModel/LoginModel';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useAppContext } from '../../Context/AppContext';
 const { width } = Dimensions.get('screen');
 const thumbMeasure = (width - 48 - 32) / 3;
 export const Wallet = () => {
+  const {isLoggedIn,selectedTabs,modalVisible} = useAppContext();
+  
   return (
-    <ScrollView style={[styles.container]}>
+
+    <View style={[styles.container]}>
+   
+        <ScrollView style={[styles.container]}>
         <Block>
         <Image  source={walletcard}/>
         </Block>
@@ -117,6 +125,10 @@ export const Wallet = () => {
         
        </Block>
     </ScrollView>
+     
+    {!isLoggedIn && modalVisible && selectedTabs==="Wallet" && <LoginModel />} 
+    </View>
+    
   )
 }
 

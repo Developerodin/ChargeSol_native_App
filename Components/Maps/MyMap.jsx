@@ -82,40 +82,45 @@ export const MyMap = ({navigation}) => {
     }
   };
   
-  useEffect(() => {
-    (async () => {
+  // useEffect(() => {
+  //   (async () => {
       
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        setErrorMsg('Permission to access location was denied');
-        return;
-      }
+  //     let { status } = await Location.requestForegroundPermissionsAsync();
+  //     if (status !== 'granted') {
+  //       setErrorMsg('Permission to access location was denied');
+  //       return;
+  //     }
 
-      let location = await Location.getCurrentPositionAsync({});
-      setLocation(location);
-      console.log("UserLocation==>",location);
-      const { latitude, longitude } = location.coords;
-      setUserLocation({
-        latitude,
-        longitude,
-        latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421,
-      });
-    })();
-  }, []);
+  //     let location = await Location.getCurrentPositionAsync({});
+  //     setLocation(location);
+  //     console.log("UserLocation==>",location);
+  //     const { latitude, longitude } = location.coords;
+  //     setUserLocation({
+  //       latitude,
+  //       longitude,
+  //       latitudeDelta: 0.0922,
+  //       longitudeDelta: 0.0421,
+  //     });
+  //   })();
+  // }, []);
 
-  let text = 'Waiting..';
-  if (errorMsg) {
-    text = errorMsg;
-  } else if (location) {
-    text = JSON.stringify(location);
-  }
+  // let text = 'Waiting..';
+  // if (errorMsg) {
+  //   text = errorMsg;
+  // } else if (location) {
+  //   text = JSON.stringify(location);
+  // }
   return (
       // "apiKey": "AIzaSyBKPYoMWGdRfZsZlYwwFC00xx0LAr8snyo"
       
-    <MapView style={styles.map} initialRegion={UserLocation} provider={PROVIDER_GOOGLE}  >
+    <MapView style={styles.map} initialRegion={{
+      latitude:20.5937,
+      longitude:78.9629,
+      latitudeDelta:25,
+      longitudeDelta:25,
+    }}  provider={PROVIDER_GOOGLE}  >
       {/* <MapView style={styles.map}/> */}
-    {UserLocation && (
+    {/* {UserLocation && (
       <Marker
         coordinate={UserLocation}
         title="You are here"
@@ -123,7 +128,7 @@ export const MyMap = ({navigation}) => {
       >
         <Image source={Car} style={{ width: 23, height: 36 }} />
       </Marker>
-    )} 
+    )}  */}
     {InitialChargerData.map((marker) => (
       <Marker
         key={marker.StaionID}
