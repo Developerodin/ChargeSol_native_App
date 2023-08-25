@@ -48,7 +48,7 @@ export const Profile = ({navigation}) => {
   };
   return (
     <View style={[styles.container]}>
-   
+      
         <ScrollView style={[{flex:1}]}>
       
         <View >
@@ -145,8 +145,10 @@ export const Profile = ({navigation}) => {
        
           
       </ScrollView>
+     
+        
       
-      {!isLoggedIn && modalVisible && selectedTabs==="Trips" && <LoginModel />} 
+      
     </View>
     
   )

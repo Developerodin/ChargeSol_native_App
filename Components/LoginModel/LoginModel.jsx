@@ -44,7 +44,8 @@ export const LoginModel = () => {
               console.log("Login==>",formData,otp)
             setFormData(initalValues);
             setIsLoggedIn(true);
-            navigation.navigate('Home');
+            setModalVisible(false);
+            navigation.navigate('Tabs');
             } catch (e) {
               // saving error
               console.log("Error saving Auth:",e)
@@ -199,7 +200,7 @@ const styles = StyleSheet.create({
       flex: 1,
       justifyContent: 'flex-end',
       alignItems: 'center',
-     marginBottom:-30
+     marginBottom:-50
     },
     modalView: {
       margin: 20,

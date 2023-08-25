@@ -47,7 +47,7 @@ console.log("In Home ")
       {/* <Text style={{borderWidth:1,borderColor:"red",zIndex:10,marginTop:30}}>Home Screen</Text> */}
       <MyMap navigation={navigation}/>
       <StatusBar style="auto" />
-      {/* <LoginModel /> */}
+      <LoginModel />
     </View>
   )
 }

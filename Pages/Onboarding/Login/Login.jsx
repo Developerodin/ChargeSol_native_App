@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react'
-import { View, TextInput, StyleSheet, Image, ScrollView,Dimensions } from 'react-native'
+import { View, TextInput, StyleSheet, Image, ScrollView,Dimensions,KeyboardAvoidingView, SafeAreaView } from 'react-native'
 import bg from "../Images/LoginBG.png"
 import {  Block, Text, Input, theme,Button} from 'galio-framework';
 import { NavigationActions } from '@react-navigation/native';
@@ -10,6 +10,7 @@ import OtpInput from '../../../Components/Otp/OtpInputs';
 import { AntDesign } from '@expo/vector-icons'; 
 import { Ionicons } from '@expo/vector-icons'; 
 import { MaterialCommunityIcons } from '@expo/vector-icons'; 
+import { useAppContext } from '../../../Context/AppContext';
 const { width,height} = Dimensions.get('screen');
 export const Login = ({navigation}) => {
   const phoneInput = useRef(null);
@@ -18,6 +19,7 @@ export const Login = ({navigation}) => {
     otp: '',
     errorMessage: '',
   }
+  const {modalVisible, setModalVisible,isLoggedIn, setIsLoggedIn} = useAppContext();
     const [formData, setFormData] = useState(initalValues);
     const [otp, setOtp] = useState('');
     const [mobileNumber, setmobileNumber] = useState();
@@ -29,6 +31,7 @@ export const Login = ({navigation}) => {
           try {
             await AsyncStorage.setItem('Auth','true');
             console.log("Login==>",formData,otp)
+            setIsLoggedIn(true);
           setFormData(initalValues);
           navigation.navigate('Tabs');
           } catch (e) {
@@ -81,8 +84,12 @@ export const Login = ({navigation}) => {
       };
 
   return (
-     <Block  style={styles.container}>
+   
+<SafeAreaView  style={styles.container}>
       <StatusBar style="auto" />
+     
+      
+      
         <Block right style={[{marginTop:20}]}>
           <Block style={styles.AlignCenter} >
           <Text onPress={handleSkip} style={{fontSize:18,fontWeight:"bold",marginRight:3,color:"#2DA194"}}>SKIP</Text>
@@ -151,12 +158,15 @@ export const Login = ({navigation}) => {
      <View style={{justifyContent:"center",zIndex:10,marginTop:20}}>
         <OtpInput length={4} onComplete={handleOtpComplete} />
       </View>
-        <Block style={styles.AlignCenter}>
-        <Button  onPress={handleLogin} color="#2DA194" style={{ width:"85%",marginTop:25,zIndex:10 }} >
+        <Block center>
+        <Button  onPress={handleLogin} color="#2DA194" style={{ width:width-100,marginTop:25,zIndex:10 }} >
           Login
         </Button>
         {/* <Button  onPress={setMobileNumber} color="#2DA194" style={{ width:"85%",marginTop:25 }} >Get OTP</Button> */}
+        
         {formData.errorMessage ? <Text style={styles.error}>{formData.errorMessage}</Text> : null}
+       
+        
         </Block>
         
         </Block>
@@ -164,18 +174,24 @@ export const Login = ({navigation}) => {
 }
       
       
-      
-      <Block style={styles.bottomBlock}>
+{/* <KeyboardAvoidingView
+        behavior="position"
+        contentContainerStyle={{ flex:1 }}
+       
+      > */}
+      <Block  style={styles.bottomBlock} >
         <Image source={bg} style={{ width:"100%"}}  />
         <View style={styles.textContainer} >
         <Text style={styles.text}>Don't have an account?</Text>
         <Text style={styles.text} onPress={handelSignup}  > Sign up </Text>
       </View>
       </Block>
+{/* </KeyboardAvoidingView> */}
 
-
-
-    </Block>
+    
+    </SafeAreaView>
+    
+     
   )
 }
 
@@ -183,6 +199,7 @@ const styles = StyleSheet.create({
     container: {
       flex: 1,
       backgroundColor: '#fff',
+      minHeight:height
     },
     AlignCenter:{
       flexDirection: 'row',
@@ -230,8 +247,8 @@ const styles = StyleSheet.create({
       },
       bottomBlock:{
        position: 'absolute',
-       bottom:0,
-       width:"100%"
+       bottom:80,
+       width:width
       },
       textContainer: {
         position: 'absolute',

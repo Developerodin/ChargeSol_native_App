@@ -1,5 +1,5 @@
-import React from 'react'
-import { FlatList, SafeAreaView, StyleSheet, Text, View,Dimensions,TouchableOpacity, Image } from 'react-native'
+import React, { useRef } from 'react'
+import { FlatList, SafeAreaView, StyleSheet, Text, View,Dimensions,TouchableOpacity, Image,Animated } from 'react-native'
 import { StatusBar } from 'expo-status-bar';
 const {width, height} = Dimensions.get('window');
 import Asset21 from "../../CarImages/WelocmeScreen/Asset21.png"
@@ -57,6 +57,7 @@ const Slide = ({item}) => {
   );
 };
 export const AppSlides = ({navigation}) => {
+  const scrollX = useRef(new Animated.Value(0)).current;
   const [currentSlideIndex, setCurrentSlideIndex] = React.useState(0);
   const ref = React.useRef();
   const updateCurrentSlideIndex = e => {
@@ -178,8 +179,16 @@ export const AppSlides = ({navigation}) => {
         contentContainerStyle={{height: height * 0.85}}
         showsHorizontalScrollIndicator={false}
         horizontal
+        decelerationRate="fast"
+        keyExtractor={(item)=>item.id}
         data={slides}
         pagingEnabled
+        bounces={false}
+        onScroll={Animated.event(
+          [{ nativeEvent: { contentOffset: { x: scrollX } } }],
+          { useNativeDriver: false }
+        )}
+        scrollEventThrottle={32}
         renderItem={({item}) => <Slide item={item} />}
       />
       <Footer />

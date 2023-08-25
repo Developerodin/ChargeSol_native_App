@@ -6,7 +6,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { Block } from 'galio-framework';
 import { Feather } from '@expo/vector-icons'; 
 import { EvilIcons } from '@expo/vector-icons'
-const { width } = Dimensions.get('screen');
+const { width,height } = Dimensions.get('screen');
 export const Welcome = ({navigation}) => {
   const handelBegin=()=>{
     navigation.navigate("AppSlides")
@@ -31,7 +31,7 @@ export const Welcome = ({navigation}) => {
           </Text>
 
 <View  style={{flexDirection:"row",justifyContent:"left",alignItems:"center",marginTop:100,padding:5}}>
-<Text onPress={handelBegin} style={{fontWeight: 600,fontSize:16,color:"#FFF",letterSpacing:3}}>LET'S BEGIN </Text>
+<Text  style={{fontWeight: 600,fontSize:16,color:"#FFF",letterSpacing:3}}>LET'S BEGIN </Text>
 <Feather name="arrow-right-circle" size={24} color="#FFF" />
 </View>
           
@@ -44,6 +44,8 @@ export const Welcome = ({navigation}) => {
 const styles = StyleSheet.create({
   container:{
     flex: 1,
+    width:width,
+    height:height
   },
   Text_Container:{
     flex: 0.9,
@@ -53,7 +55,7 @@ const styles = StyleSheet.create({
   },
   Image: {
     ...StyleSheet.absoluteFillObject,
-    height: Dimensions.get("window").height,
+    height:height,
     width : width
 },
 

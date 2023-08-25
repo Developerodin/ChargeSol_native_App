@@ -9,6 +9,7 @@ import Geolocation from 'react-native-geolocation-service';
 import MapView, { Marker,Polyline,PROVIDER_GOOGLE } from 'react-native-maps';
 import { Dimensions } from "react-native";
 import * as Location from 'expo-location';
+import MapStyle from "./MapStyle.json"
 const InitialChargerData=[
  
   {StaionID:"46",lat:26.8248938,lng:75.7217989,title:"Highway King Bhankrota",icon:Icon,Rating:"3.5",Status:"Available",Place:"Bhankrota",Distance:"5 km",Reviews:"22",travelTime:"42"},
@@ -114,11 +115,13 @@ export const MyMap = ({navigation}) => {
       // "apiKey": "AIzaSyBKPYoMWGdRfZsZlYwwFC00xx0LAr8snyo"
       
     <MapView style={styles.map} initialRegion={{
-      latitude:20.5937,
-      longitude:78.9629,
-      latitudeDelta:25,
-      longitudeDelta:25,
-    }}  provider={PROVIDER_GOOGLE}  >
+      latitude:26.9124,
+      longitude:75.7873,
+      latitudeDelta:30,
+      longitudeDelta:30,
+    }}  provider={PROVIDER_GOOGLE} 
+    customMapStyle={MapStyle}
+    >
       {/* <MapView style={styles.map}/> */}
     {/* {UserLocation && (
       <Marker

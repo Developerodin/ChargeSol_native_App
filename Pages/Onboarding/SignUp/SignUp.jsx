@@ -1,8 +1,9 @@
 import React, { useRef, useState } from 'react'
-import { View, TextInput, StyleSheet, Image, ScrollView } from 'react-native'
+import { View, TextInput, StyleSheet, Image, ScrollView,Dimensions } from 'react-native'
 import bg from "../Images/LoginBG.png"
 import {  Block, Text, Input, theme,Button} from 'galio-framework';
 import PhoneInput from "react-native-phone-number-input";
+const { width,height} = Dimensions.get('screen');
 export const SignUp = ({navigation}) => {
 
     const initalValues=
@@ -113,6 +114,7 @@ const styles = StyleSheet.create({
     container: {
       flex: 1,
       backgroundColor: '#fff',
+      minHeight:height
     },
     AlignCenter:{
       display:"flex",

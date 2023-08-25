@@ -19,114 +19,116 @@ export const Wallet = () => {
   return (
 
     <View style={[styles.container]}>
-   
-        <ScrollView style={[styles.container]}>
-        <Block>
-        <Image  source={walletcard}/>
-        </Block>
-
-        <Block style={[{marginTop:30,marginLeft:5}]}>
-      
-        <Text style={{fontSize:19,fontWeight:700,color:"#4E5053"}}>Functions</Text>
-      
-        </Block>
-
-        <Block style={[{marginTop:10,padding:5},styles.Space_Between]}>
-        <SamllCards Icon={Transfer} text1="" text2="RECHARGE" Color="#F26522" Color2="#727376" />
-        <SamllCards Icon={StarIcon} text1="" text2="OFFERS" Color="#37CE86" Color2="#727376" />
-        <SamllCards Icon={Exchange} text1="" text2="HISTORY" Color="#F26522" Color2="#727376" />
-       
-      
-      </Block>
-      <Block style={[{backgroundColor:"#FEF8F6",height:126,marginTop:30,borderRadius:10,zIndex:10,marginBottom:-10},styles.Space_Around]}>
-          <Block left>
-            <Text style={{fontSize:30,fontWeight:500,color:"#4E5053"}}>Refer and earn</Text>
-            <Text style={{fontSize:25,fontWeight:500,color:"#4E5053"}}>₹300 cashback</Text>
-            <Text style={{fontSize:12,fontWeight:500,color:"#4E5053"}}>Cashback will be credited in your app wallet</Text>
-          </Block>
-
-          <Block>
-            <Image source={referImg}></Image>
-          </Block>
+ 
+       <ScrollView style={[styles.container]}>
+       <Block>
+       <Image  source={walletcard}/>
        </Block>
 
-       <Block center >
-             <Block center style={[{width:width - (theme.SIZES.BASE * 8),backgroundColor:"#F26522",height:60,borderRadius:10},styles.Center]}>
-              <Text style={{color:"#FFFF",fontWeight:700,fontSize:20, marginRight:10}}>ICXXXX</Text>
-              
-              <Image style={[{width:20,height:26}]} source={copyicon}/>
-           
-             </Block>
-             
-       </Block>
-        
-        
-       <Block style={[{marginTop:30,marginBottom:100,backgroundColor:"#FFFF",padding:10,height:300,overFlow:"auto"}]}>
-        <Block style={[styles.Space_Between]}>
-        <Text>Recent transactions</Text>
-        {/* <Text>More</Text> */}
-        </Block>
-        <ScrollView
-        contentContainerStyle={{ flexGrow: 1 }}
-        showsVerticalScrollIndicator={false}
-        nestedScrollEnabled
-        >
-
-        <Block>
-          
-          <Block style={[styles.Space_Between,{marginTop:20}]}>
-              <Block>
-                <Text style={{fontSize:14,fontWeight:500,color:"#727376"}}>Wallet Top up</Text>
-                <Text style={{fontSize:14,fontWeight:500,color:"#B9B9B9"}}>Master Card</Text>
-              </Block>
-              <Block>
-              <Text style={{fontSize:14,fontWeight:500,color:"#727376"}}>+ ₹ 1,000</Text>
-                <Text style={{fontSize:14,fontWeight:500,color:"#B9B9B9"}}>09/09/2023</Text>
-              </Block>
-          </Block>
-
-          <Block style={[styles.Space_Between,{marginTop:20}]}>
-              <Block>
-                <Text style={{fontSize:14,fontWeight:500,color:"#727376"}}>Wallet Top up</Text>
-                <Text style={{fontSize:14,fontWeight:500,color:"#B9B9B9"}}>Master Card</Text>
-              </Block>
-              <Block>
-              <Text style={{fontSize:14,fontWeight:500,color:"#727376"}}>+ ₹ 1,000</Text>
-                <Text style={{fontSize:14,fontWeight:500,color:"#B9B9B9"}}>09/09/2023</Text>
-              </Block>
-          </Block>
-
-          <Block style={[styles.Space_Between,{marginTop:20}]}>
-              <Block>
-                <Text style={{fontSize:14,fontWeight:500,color:"#727376"}}>Wallet Top up</Text>
-                <Text style={{fontSize:14,fontWeight:500,color:"#B9B9B9"}}>Master Card</Text>
-              </Block>
-              <Block>
-              <Text style={{fontSize:14,fontWeight:500,color:"#727376"}}>+ ₹ 1,000</Text>
-                <Text style={{fontSize:14,fontWeight:500,color:"#B9B9B9"}}>09/09/2023</Text>
-              </Block>
-          </Block>
-
-          <Block style={[styles.Space_Between,{marginTop:20}]}>
-              <Block>
-                <Text style={{fontSize:14,fontWeight:500,color:"#727376"}}>Wallet Top up</Text>
-                <Text style={{fontSize:14,fontWeight:500,color:"#B9B9B9"}}>Master Card</Text>
-              </Block>
-              <Block>
-              <Text style={{fontSize:14,fontWeight:500,color:"#727376"}}>+ ₹ 1,000</Text>
-                <Text style={{fontSize:14,fontWeight:500,color:"#B9B9B9"}}>09/09/2023</Text>
-              </Block>
-          </Block>
-
-        </Block>
-        </ScrollView>
-
-        
-        
-       </Block>
-    </ScrollView>
+       <Block style={[{marginTop:30,marginLeft:5}]}>
      
-    {!isLoggedIn && modalVisible && selectedTabs==="Wallet" && <LoginModel />} 
+       <Text style={{fontSize:19,fontWeight:700,color:"#4E5053"}}>Functions</Text>
+     
+       </Block>
+
+       <Block style={[{marginTop:10,padding:5},styles.Space_Between]}>
+       <SamllCards Icon={Transfer} text1="" text2="RECHARGE" Color="#F26522" Color2="#727376" />
+       <SamllCards Icon={StarIcon} text1="" text2="OFFERS" Color="#37CE86" Color2="#727376" />
+       <SamllCards Icon={Exchange} text1="" text2="HISTORY" Color="#F26522" Color2="#727376" />
+      
+     
+     </Block>
+     <Block style={[{backgroundColor:"#FEF8F6",height:126,marginTop:30,borderRadius:10,zIndex:10,marginBottom:-10},styles.Space_Around]}>
+         <Block left>
+           <Text style={{fontSize:30,fontWeight:500,color:"#4E5053"}}>Refer and earn</Text>
+           <Text style={{fontSize:25,fontWeight:500,color:"#4E5053"}}>₹300 cashback</Text>
+           <Text style={{fontSize:12,fontWeight:500,color:"#4E5053"}}>Cashback will be credited in your app wallet</Text>
+         </Block>
+
+         <Block>
+           <Image source={referImg}></Image>
+         </Block>
+      </Block>
+
+      <Block center >
+            <Block center style={[{width:width - (theme.SIZES.BASE * 8),backgroundColor:"#F26522",height:60,borderRadius:10},styles.Center]}>
+             <Text style={{color:"#FFFF",fontWeight:700,fontSize:20, marginRight:10}}>ICXXXX</Text>
+             
+             <Image style={[{width:20,height:26}]} source={copyicon}/>
+          
+            </Block>
+            
+      </Block>
+       
+       
+      <Block style={[{marginTop:30,marginBottom:100,backgroundColor:"#FFFF",padding:10,height:300,overFlow:"auto"}]}>
+       <Block style={[styles.Space_Between]}>
+       <Text>Recent transactions</Text>
+       {/* <Text>More</Text> */}
+       </Block>
+       <ScrollView
+       contentContainerStyle={{ flexGrow: 1 }}
+       showsVerticalScrollIndicator={false}
+       nestedScrollEnabled
+       >
+
+       <Block>
+         
+         <Block style={[styles.Space_Between,{marginTop:20}]}>
+             <Block>
+               <Text style={{fontSize:14,fontWeight:500,color:"#727376"}}>Wallet Top up</Text>
+               <Text style={{fontSize:14,fontWeight:500,color:"#B9B9B9"}}>Master Card</Text>
+             </Block>
+             <Block>
+             <Text style={{fontSize:14,fontWeight:500,color:"#727376"}}>+ ₹ 1,000</Text>
+               <Text style={{fontSize:14,fontWeight:500,color:"#B9B9B9"}}>09/09/2023</Text>
+             </Block>
+         </Block>
+
+         <Block style={[styles.Space_Between,{marginTop:20}]}>
+             <Block>
+               <Text style={{fontSize:14,fontWeight:500,color:"#727376"}}>Wallet Top up</Text>
+               <Text style={{fontSize:14,fontWeight:500,color:"#B9B9B9"}}>Master Card</Text>
+             </Block>
+             <Block>
+             <Text style={{fontSize:14,fontWeight:500,color:"#727376"}}>+ ₹ 1,000</Text>
+               <Text style={{fontSize:14,fontWeight:500,color:"#B9B9B9"}}>09/09/2023</Text>
+             </Block>
+         </Block>
+
+         <Block style={[styles.Space_Between,{marginTop:20}]}>
+             <Block>
+               <Text style={{fontSize:14,fontWeight:500,color:"#727376"}}>Wallet Top up</Text>
+               <Text style={{fontSize:14,fontWeight:500,color:"#B9B9B9"}}>Master Card</Text>
+             </Block>
+             <Block>
+             <Text style={{fontSize:14,fontWeight:500,color:"#727376"}}>+ ₹ 1,000</Text>
+               <Text style={{fontSize:14,fontWeight:500,color:"#B9B9B9"}}>09/09/2023</Text>
+             </Block>
+         </Block>
+
+         <Block style={[styles.Space_Between,{marginTop:20}]}>
+             <Block>
+               <Text style={{fontSize:14,fontWeight:500,color:"#727376"}}>Wallet Top up</Text>
+               <Text style={{fontSize:14,fontWeight:500,color:"#B9B9B9"}}>Master Card</Text>
+             </Block>
+             <Block>
+             <Text style={{fontSize:14,fontWeight:500,color:"#727376"}}>+ ₹ 1,000</Text>
+               <Text style={{fontSize:14,fontWeight:500,color:"#B9B9B9"}}>09/09/2023</Text>
+             </Block>
+         </Block>
+
+       </Block>
+       </ScrollView>
+
+       
+       
+      </Block>
+   </ScrollView>
+   
+       
+     
+    
     </View>
     
   )

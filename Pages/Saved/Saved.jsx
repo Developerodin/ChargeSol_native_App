@@ -29,8 +29,7 @@ export const Saved = () => {
  
   return (
     <View style={[styles.container]}>
-      {/* {
-        isLoggedIn ?  */}
+      
         <ScrollView style={[styles.container]}>
       <Block style={{marginBottom:90}}>
         {
@@ -43,8 +42,9 @@ export const Saved = () => {
         
       </Block>
    </ScrollView>
-  {!isLoggedIn && modalVisible && selectedTabs==="Saved" && <LoginModel />} 
-         
+   
+
+      
     </View>
    
   )
