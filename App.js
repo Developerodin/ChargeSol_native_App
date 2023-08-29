@@ -23,6 +23,12 @@ import { AppProvider, useAppContext } from "./Context/AppContext";
 import { LoginModel } from "./Components/LoginModel/LoginModel";
 
 import * as SplashScreen from 'expo-splash-screen';
+import { ChargerDetail } from "./Pages/ChargerDetail/ChargerDeatil";
+import { Charging } from "./Pages/Charging/Charging";
+import { ChargingComplete } from "./Pages/Charging/ChargingComplete";
+import { PaymentSuccessfull } from "./Pages/Payment/PaymentSuccessfull";
+import { Receipt } from "./Pages/Payment/Receipt";
+import { Search } from "./Pages/Search/Search";
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -48,7 +54,7 @@ const Tabs = ({navigation}) => {
       tabBarActiveTintColor: '#1b998b',
       tabBarInactiveTintColor :'#fff',
       tabBarLabelStyle:{color:"#fff"},
-      tabBarStyle: { backgroundColor: '#2E2A4F',color:"#fff",position: 'absolute',bottom:0,paddingTop:2,paddingBottom:3},
+      tabBarStyle: { backgroundColor: '#2E2A4F',color:"#fff",position:'absolute',bottom:0,paddingTop:2,paddingBottom:3},
     }}
     >
       <Tab.Screen
@@ -57,7 +63,8 @@ const Tabs = ({navigation}) => {
         options={{
           tabBarIcon: ({ color, size }) => (
 
-            <Ionicons name="home" color={color} size={size} />
+          
+            <Ionicons name="home" color={color} size={size}  />
           ),
           headerShown: false,
         }}
@@ -75,7 +82,7 @@ const Tabs = ({navigation}) => {
         component={ Saved }
         options={{
           tabBarIcon: ({ color, size }) => (
-            <FontAwesome name="bookmark-o" size={size} color={color} />
+            <FontAwesome name="bookmark" size={size} color={color} />
           ),
          
         }}
@@ -110,7 +117,7 @@ const Tabs = ({navigation}) => {
         component={ Wallet}
         options={{
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="md-wallet-outline" size={size} color={color} />
+            <Ionicons name="md-wallet" size={size} color={color} />
           ),
          
         }}
@@ -220,8 +227,16 @@ export default function App() {
             headerShown: false,
           }}
         />
-       
-        
+        <Stack.Screen
+          name="Search"
+          component={Search}
+          
+        />
+       <Stack.Screen name="ChargerDetail" component={ChargerDetail} />
+       <Stack.Screen name="Charging" component={Charging} />
+       <Stack.Screen name="ChargingComplete" component={ChargingComplete} />
+       <Stack.Screen name="PaymentSuccessfull" component={PaymentSuccessfull} />
+       <Stack.Screen name="Receipt" component={Receipt} />
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="SignUp" component={SignUp} />
         <Stack.Screen name="Profile" component={Profile} />

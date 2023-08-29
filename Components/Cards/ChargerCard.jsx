@@ -1,16 +1,24 @@
 import { Block, Button, Card, Text,theme } from 'galio-framework'
 import React from 'react'
-import { StyleSheet,Dimensions, Image } from 'react-native'
+import { StyleSheet,Dimensions, Image,TouchableOpacity } from 'react-native'
 import { materialTheme } from '../../constants/Theme';
+import { useNavigation } from '@react-navigation/native';
 
 const { width } = Dimensions.get('screen');
 const thumbMeasure = (width - 48 - 32) / 3;
 export const ChargerCard = (props) => {
+  const navigation = useNavigation();
+
     
     const {ChargerData,SICON,TIocn,AC, DC,Star}=props;
+
+    const handelChargerCardCLick=()=>{
+      console.log("charger Card click")
+      navigation.navigate("ChargerDetail")
+    }
   return (
     
-       <Block style={[styles.container,styles.Space_Between]}>
+       <TouchableOpacity  onPress={handelChargerCardCLick}   style={[styles.container,styles.Space_Between]} >
         
         <Block>
           <Block>
@@ -42,7 +50,7 @@ export const ChargerCard = (props) => {
             <Image source={TIocn}  />
             </Block>
             <Block  style={[{backgroundColor:"#F1F1F1",width:22,height:22,borderRadius:5},styles.Center]}>
-            <Image source={AC}  />
+            <Image  source={AC}  />
             </Block>
             <Block  style={[{backgroundColor:"#F1F1F1",width:22,height:22,borderRadius:5},styles.Center]}>
             <Image source={DC}  />
@@ -52,7 +60,7 @@ export const ChargerCard = (props) => {
           </Block>
         </Block>
        
-       </Block>
+       </TouchableOpacity >
             
             
            
@@ -63,7 +71,7 @@ export const ChargerCard = (props) => {
 const styles = StyleSheet.create({
     container: {
         flexDirection:"row",
-      width:"100%",
+    
       borderRadius:5,
       backgroundColor:"#FFFF",
       elevation:3,

@@ -80,7 +80,11 @@ export const Login = ({navigation}) => {
       }
       const handleSkip = () => {
         console.log("Handel SKip")
-        navigation.navigate('Tabs'); // Navigate to Tabs and specify the Home tab
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'Tabs' }],
+        });
+     
       };
 
   return (
@@ -199,7 +203,7 @@ const styles = StyleSheet.create({
     container: {
       flex: 1,
       backgroundColor: '#fff',
-      minHeight:height
+      minHeight:height,
     },
     AlignCenter:{
       flexDirection: 'row',

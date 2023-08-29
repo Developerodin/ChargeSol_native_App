@@ -7,7 +7,8 @@ export const AppProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedTabs,setSelectedTabs]=useState("Home");
-  
+  const [selectedMarker, setSelectedMarker] = useState(null);
+  const [isMarkerModalVisible, setMarkerModalVisible] = useState(false);
   const toggleLogin = () => {
     setIsLoggedIn(!isLoggedIn);
   };
@@ -38,7 +39,7 @@ export const AppProvider = ({ children }) => {
 //   },[selectedTabs])
 
   return (
-    <AppContext.Provider value={{selectedTabs,setSelectedTabs, isLoggedIn, toggleLogin,modalVisible,setModalVisible,isLoggedIn,setIsLoggedIn }}>
+    <AppContext.Provider value={{selectedMarker, setSelectedMarker,isMarkerModalVisible, setMarkerModalVisible,selectedTabs,setSelectedTabs, isLoggedIn, toggleLogin,modalVisible,setModalVisible,isLoggedIn,setIsLoggedIn }}>
       {children}
     </AppContext.Provider>
   );
