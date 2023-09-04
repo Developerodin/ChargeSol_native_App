@@ -100,7 +100,7 @@ export const LoginModel = () => {
 
   return (
     <Modal
- 
+    propagateSwipe={true}
         animationType="slide"
         transparent={true}
         isVisible={modalVisible}
