@@ -18,7 +18,7 @@ export const ChargerCard = (props) => {
     }
   return (
     
-       <TouchableOpacity  onPress={handelChargerCardCLick}   style={[styles.container,styles.Space_Between]} >
+       <TouchableOpacity activeOpacity={0.8}  onPress={handelChargerCardCLick}   style={[styles.container,styles.Space_Between]} >
         
         <Block>
           <Block>

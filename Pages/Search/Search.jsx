@@ -1,16 +1,45 @@
 import { Block, Input } from 'galio-framework'
-import React from 'react'
-import { StyleSheet, Text, View,Dimensions, SafeAreaView } from 'react-native'
+import React, { useState } from 'react'
+import { StyleSheet, Text, View,Dimensions, SafeAreaView, TouchableOpacity } from 'react-native'
 import { Ionicons } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons'; 
 import { StatusBar } from "expo-status-bar";
 import { useNavigation } from '@react-navigation/native';
+import { useMapContext } from '../../Context/MapContext';
+import { useAppContext } from '../../Context/AppContext';
+import { FontAwesome } from '@expo/vector-icons'; 
+import { Entypo } from '@expo/vector-icons';
 const { width, height } = Dimensions;
 export const Search = () => {
     const navigation = useNavigation()
+    const {goToUserLocation,AnimationGoToPoint,chargerData} = useMapContext()
+    const { setSelectedMarker, setMarkerModalVisible} = useAppContext()
+    const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+
+  const handleSearch = (query) => {
+    // Filter the chargerData based on the search query
+    const filteredResults = chargerData.filter((station) =>
+      station.title.toLowerCase().includes(query.toLowerCase())
+    );
+    setSearchResults(filteredResults);
+  };
 
    const handelBackButton=()=>{
          navigation.goBack()
+    }
+
+    const handelChargerClick=(marker)=>{
+      setSelectedMarker(marker)
+      setMarkerModalVisible(true)
+      navigation.goBack();
+      AnimationGoToPoint(marker.lat,marker.lng)
+    
+    }
+
+    const handelCurrentLoction=()=>{
+      navigation.goBack();
+      goToUserLocation()
     }
   return (
     <SafeAreaView style={styles.container}>
@@ -31,30 +60,87 @@ export const Search = () => {
             iconSize={19}
             iconColor="grey"
             style={{borderWidth:0,}}
+            onChangeText={(text) => {
+              setSearchQuery(text);
+              handleSearch(text);
+            }}
           />
           <Block style={{borderTopWidth:0.5,borderColor:"grey"}}>
 
           </Block>
+          <TouchableOpacity activeOpacity={0.8} onPress={handelCurrentLoction} >
           <Block style={[styles.Space_Between,{marginTop:15}]}>
-            <Block style={{flexDirection:"row",justifyContent:"center",alignItems:"center"}}>
-            <MaterialIcons style={{marginLeft:12}}  name="my-location" size={24} color="grey" />
-            <Text style={{marginLeft:10}}>Current Location</Text>
-            </Block>
 
-            <Block>
-            <MaterialIcons name="arrow-forward-ios" size={20} color="grey" />
-            </Block>
+           
+<Block style={{flexDirection:"row",justifyContent:"center",alignItems:"center"}}>
+<MaterialIcons style={{marginLeft:12}}  name="my-location" size={24} color="grey" />
+
+<Text style={{marginLeft:10}}>Current Location</Text>
+
+
+</Block>
+
+
+
+<Block>
+<MaterialIcons  name="arrow-forward-ios" size={20} color="grey" />
+</Block>
+
+           </Block>
+         </TouchableOpacity>
+          
          
-          </Block>
             </Block>
        
         </Block>
 
         </Block>
 
-        <Block style={{backgroundColor:"#FFF",marginTop:10}}>
+        {searchQuery.length > 0 && (
+          <Block style={{ backgroundColor: '#FFF', marginTop: 10 ,padding:10}}>
+          {/* Display search results */}
+          {searchResults.length > 0 ? (
+          searchResults.map((result) => (
+            <TouchableOpacity
+              key={result.StaionID}
+              onPress={() => {
+                handelChargerClick(result)
+              }}
+  
+            >
+              <Block style={[styles.Space_Between,{borderBottomWidth:0.5,borderColor:"grey"}]}>
+  
+                <Block center style={{flexDirection:"row",marginBottom:10,marginTop:10}}>
+                <Entypo style={{marginRight:5}} name="location-pin" size={25} color="grey" />
+                <Block>
+                <Text style={{fontSize:16}}>{result.title}</Text>
+                <Text style={{fontSize:12,color:"grey",marginTop:5}}>{result.Place}</Text>
+                
+                </Block>
+                
+                </Block>
+  
+                <Block>
+                <MaterialIcons  name="arrow-forward-ios" size={20} color="grey" />
+                </Block>
+              
+              </Block>
+            
+              
+             
+            </TouchableOpacity>
+          ))
+          )
+          :
+          <Block center>
+            <Text style={{fontSize:20,fontWeight:"bold",color:"grey"}}>No Chargers Available !</Text>
+            </Block>
 
+            }
         </Block>
+        ) }
+        
+        
         
        
     </SafeAreaView>

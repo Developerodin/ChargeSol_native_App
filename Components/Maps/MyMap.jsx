@@ -11,13 +11,8 @@ import { Dimensions } from "react-native";
 import * as Location from 'expo-location';
 import MapStyle from "./MapStyle.json"
 import { useAppContext } from '../../Context/AppContext';
-const InitialChargerData=[
- 
-  {StaionID:"46",lat:26.8248938,lng:75.7217989,title:"Highway King Bhankrota",icon:Icon,Rating:"3.5",Status:"Available",Place:"Bhankrota",Distance:"5 km",Reviews:"22",travelTime:"42"},
-  {StaionID:"41",lat:26.8148938,lng:75.7117989,title:"Highway King Bagru",icon:Icon,Rating:"1.5",Status:"Available",Place:"Bagru",Distance:"14 km",Reviews:"27",travelTime:"44"},
-  {StaionID:"54",lat:28.5355,lng:77.3910,title:"Highway King Noida",icon:Icon,Rating:"1.5",Status:"Available",Place:"Noida",Distance:"94 km",Reviews:"27",travelTime:"44"},
-  {StaionID:"64",lat:29.0588,lng:76.0856,title:"Highway King Haryana",icon:Icon,Rating:"1.5",Status:"Available",Place:"Haryana",Distance:"94 km",Reviews:"27",travelTime:"44"},
-]
+import { useMapContext } from '../../Context/MapContext';
+
 const customMarkers = [
   {
     id: 1,
@@ -40,20 +35,49 @@ const customMarkers = [
 ];
 
 export const MyMap = ({navigation}) => {
-  
-  const [UserLocation, setUserLocation] = useState(false);
+  const {chargerData,setUserLocation,UserLocation,MapRef,setMapRef} = useMapContext()
+  // const [UserLocation, setUserLocation] = useState(false);
+
+  const initialRegion2 = {
+    latitude:26.9124,
+    longitude:75.7873,
+    latitudeDelta:0.25,
+    longitudeDelta:0.25,
+  }
+  const [initalRegion,setinitalRegion] = useState(initialRegion2)
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
   const [zoomLevel, setZoomLevel] = useState(12);
   const {selectedMarker, setSelectedMarker,isMarkerModalVisible, setMarkerModalVisible} = useAppContext()
   const mapRef = useRef(null);
+
   async function getCurrentLocation() {
-    // let { status } = await Location.requestForegroundPermissionsAsync();
+    let { status } = await Location.requestForegroundPermissionsAsync();
     
-    // if (status !== 'granted') {
-    //   console.log('Location permission denied');
-    //   return;
-    // }
+    if (status !== 'granted') {
+      console.log('Location permission denied');
+      try {
+        let location = await Location.getCurrentPositionAsync({});
+        console.log('Current location:', location);
+        const { latitude, longitude } = location.coords;
+        setUserLocation({
+          latitude,
+          longitude,
+          latitudeDelta: 0.25,
+          longitudeDelta: 0.25,
+        });
+  
+        setinitalRegion({
+          latitude,
+          longitude,
+          latitudeDelta: 0.25,
+          longitudeDelta: 0.25,
+        });
+      } catch (error) {
+        console.error('Error getting current location:', error);
+      }
+      return;
+    }
   
     try {
       let location = await Location.getCurrentPositionAsync({});
@@ -62,8 +86,17 @@ export const MyMap = ({navigation}) => {
       setUserLocation({
           latitude,
           longitude,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
+          latitudeDelta: 0.25,
+          longitudeDelta: 0.25,
+        });
+
+       
+
+        setinitalRegion( {
+          latitude,
+          longitude,
+          latitudeDelta: 0.25,
+          longitudeDelta: 0.25,
         });
       
     } catch (error) {
@@ -111,19 +144,9 @@ const initialRegion = {
     latitudeDelta:30,
     longitudeDelta:30,
   }
-  const initialRegion2 = {
-    latitude:26.9124,
-    longitude:75.7873,
-    latitudeDelta:0.25,
-    longitudeDelta:0.25,
-  }
+  
 
-  const [region] = useState(new AnimatedRegion({
-    latitude:26.9124,
-    longitude:75.7873,
-    latitudeDelta:0.25,
-    longitudeDelta:0.25,
-  }));
+  const [region] = useState(new AnimatedRegion(initalRegion));
   const onRegionChange = animatedRegion => {
     region.setValue(animatedRegion);
   };
@@ -135,8 +158,8 @@ const initialRegion = {
             center: {
               latitude:lat,
               longitude:lng,
-              latitudeDelta:0.25,
-              longitudeDelta:0.25,
+              latitudeDelta: 0.25,
+              longitudeDelta: 0.25,
             },
             pitch: 45, // Tilt angle
             heading: 0, // Heading angle
@@ -149,11 +172,13 @@ const initialRegion = {
     
   }
   useEffect(() => {
+    console.log("in use effect ")
     setTimeout(()=>{
       if (mapRef.current) {
+        setMapRef(mapRef);
         mapRef.current.animateCamera(
           {
-            center: initialRegion2,
+            center: initalRegion,
             pitch: 45, // Tilt angle
             heading: 0, // Heading angle
             altitude: 1000, // Altitude
@@ -164,7 +189,13 @@ const initialRegion = {
       }
     },2000)
     
-  }, []);
+  }, [UserLocation,initalRegion]);
+
+  
+
+  useEffect(()=>{
+    getCurrentLocation()
+  },[])
   
   return (
       // "apiKey": "AIzaSyBKPYoMWGdRfZsZlYwwFC00xx0LAr8snyo"
@@ -188,16 +219,16 @@ const initialRegion = {
     // }}
     >
       {/* <MapView style={styles.map}/> */}
-    {/* {UserLocation && (
+    {UserLocation && (
       <Marker
         coordinate={UserLocation}
         title="You are here"
         description="This is your current location"
       >
-        <Image source={Car} style={{ width: 23, height: 36 }} />
+        <Image source={Car} style={{ width: 25, height: 36 }} />
       </Marker>
-    )}  */}
-    {InitialChargerData.map((marker) => (
+    )} 
+    {chargerData.map((marker) => (
       <MarkerAnimated
         key={marker.StaionID}
         coordinate={{

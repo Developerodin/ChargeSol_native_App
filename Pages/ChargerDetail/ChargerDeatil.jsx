@@ -1,5 +1,5 @@
-import React from 'react'
-import { Image,  View,Dimensions, StyleSheet, ScrollView } from 'react-native'
+import React, { useState } from 'react'
+import { Image,  View,Dimensions, StyleSheet, ScrollView, TouchableOpacity } from 'react-native'
 import Ci from '../CarImages/ChargerStationImg.png'
 import tatalogo from "../CarImages/Tata.png"
 import { Block,theme,Text, Slider } from 'galio-framework'
@@ -23,12 +23,46 @@ import Start1 from '../CarImages/Star1.png'
 import { AddressCards } from '../../Components/Cards/AddressCards'
 import { Button } from 'galio-framework'
 import { useNavigation } from '@react-navigation/native'
+import Modal from "react-native-modal";
+import { AntDesign } from '@expo/vector-icons'; 
+import { FilterCard } from '../../Components/Cards/filterCard'
+import { MaterialCommunityIcons } from '@expo/vector-icons'; 
 const {width,height}=Dimensions
 export const ChargerDetail = () => {
+  const [ChargeNowButtonShow,setChargeNowButtonShow] = useState(true)
+  const [selectedCard, setSelectedCard] = useState(null);
+  const [lastClickTime, setLastClickTime] = useState(0);
+  const [PriceModel, setPriceModel] = useState(false);
+  const [ModelselectedCard, setModelSelectedCard] = useState('Time');
   const navigation = useNavigation();
-  const handelChargeNow=()=>{
-    navigation.navigate("Charging")
+
+  const handelChargeStart=()=>{
+navigation.navigate("Charging")
   }
+
+
+  const handelChargeNow=()=>{
+    handelsetPriceModelOpen()
+    
+  }
+  const handelsetPriceModelOpen = () => {
+    setPriceModel(true);
+  };
+  const handelConnectorSelect=(index)=>{
+    const now = Date.now();
+    if (now - lastClickTime < 300) {
+      setSelectedCard(null);
+      setChargeNowButtonShow(true)
+    } else {
+      // Handle single click (select)
+      setSelectedCard(index);
+      setChargeNowButtonShow(false);
+    }
+    setLastClickTime(now);
+    
+    
+  }
+  
   return (
     <View style={styles.container}>
       <Block >
@@ -48,16 +82,20 @@ export const ChargerDetail = () => {
 
 
        <Block style={styles.Space_Between}>
-       <ChargerInfoCard Img={Tick} Status="Available"  StatusColor="#37CE86"  Text1="Connector 1" Text2="(CCS-2)" bgColor="#FFFF"/>
+        <TouchableOpacity activeOpacity={0.9} onPress={()=>handelConnectorSelect(0)}>
+        <ChargerInfoCard Img={Tick} Status="Available"  StatusColor="#37CE86"  Text1="Connector 1" Text2="(CCS-2)" bgColor="#FFFF" border={selectedCard === 0 ? "#37CE86" : "#EFEFEF"}/>
+        </TouchableOpacity>
       
-       <ChargerInfoCard Img={ChargingLogo} Status="Charging"  StatusColor="#37CE86"  Text1="Connector 2" Text2="(CCS-2)" bgColor="#EFEFEF"/>
+        <TouchableOpacity activeOpacity={0.9} onPress={()=>handelConnectorSelect(1)}>
+       <ChargerInfoCard Img={ChargingLogo} Status="Charging"  StatusColor="#37CE86"  Text1="Connector 2" Text2="(CCS-2)" bgColor="#EFEFEF"  border={selectedCard === 1 ? "#37CE86" : "#FFFF"}/>
+       </TouchableOpacity>
        </Block>
        
        <BorderCard Title="AC | 7.4kW" Subtitle="₹ 8/kwh"/>
 
        
        <Block >
-       <ChargerInfoCard Img={Cross} Status="Disconnected"  StatusColor="#EC5E6F"  Text1="Connector 1" Text2="(Type-2)" bgColor="#EFEFEF" />
+       <ChargerInfoCard Img={Cross} Status="Disconnected"  StatusColor="#EC5E6F"  Text1="Connector 1" Text2="(Type-2)" bgColor="#EFEFEF" border="#EFEFEF" />
       
 
        </Block>
@@ -116,7 +154,7 @@ export const ChargerDetail = () => {
        </Block>
 
        <View style={{marginBottom:30,marginTop:30}}>
-            <Button color="#1B998B" style={[styles.button, styles.shadow]} onPress={handelChargeNow} >CHARGE NOW</Button>
+            <Button  disabled={ChargeNowButtonShow} color={ChargeNowButtonShow ? "crimson" : "#1B998B"} style={[styles.button, styles.shadow]} onPress={handelChargeNow} >CHARGE NOW</Button>
           </View>
 
        {/* <Block style={{marginBottom:30}}>
@@ -125,6 +163,110 @@ export const ChargerDetail = () => {
 
         </Block>
      
+        <Modal
+        propagateSwipe
+        
+        // animationType="slide"
+        // transparent={true}
+        isVisible={PriceModel}
+        onSwipeComplete={() => setPriceModel(false)}
+        backdropOpacity={0.3}
+        onBackdropPress={()=>setPriceModel(false)}
+       
+        swipeDirection={["down"]}
+        style={styles.viewModelCenter}
+      >
+        <View style={{flex:0.7,backgroundColor:"#FFFF",borderTopRightRadius:30,borderTopLeftRadius:30,padding:10}}>
+          <Block center style={{marginTop:-22}}>
+          <AntDesign name="minus" size={50} color="grey" />
+          </Block>
+          <Block style={styles.Space_Between}>
+            <Text style={{fontSize:17,fontWeight:500}}>Plug In and Press Start</Text>
+
+           
+          </Block>
+
+
+        <ScrollView horiztonal>
+          <TouchableOpacity activeOpacity={1}>
+          <Block style={[{ height: 60, backgroundColor: "#F1F1f1", marginTop: 30, padding: 10, flexDirection: "row",borderRadius:20 },styles.Space_Between]}>
+        <TouchableOpacity activeOpacity={0.9}
+          style={[styles.Center, { padding: 10, borderRadius: 15, backgroundColor: ModelselectedCard === 'Time' ? "#1B9A8B" : "#F1F1F1" }]}
+          onPress={() => setModelSelectedCard('Time')}
+        >
+          <Text center style={{ fontSize: 16, fontWeight: "bold", color: ModelselectedCard === 'Time' ? "#fff" : "#000" }}>Time</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity activeOpacity={0.9}
+          style={[styles.Center, { padding: 10, borderRadius: 15, backgroundColor: ModelselectedCard === 'Units' ? "#1B9A8B" : "#F1F1F1" }]}
+          onPress={() => setModelSelectedCard('Units')}
+        >
+          <Text center style={{ fontSize: 16, fontWeight: "bold", color: ModelselectedCard === 'Units' ? "#fff" : "#000" }}>Units</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity activeOpacity={0.9}
+          style={[styles.Center, { padding: 10, borderRadius: 15, backgroundColor: ModelselectedCard === 'Percentage' ? "#1B9A8B" : "#F1F1F1" }]}
+          onPress={() => setModelSelectedCard('Percentage')}
+        >
+          <Text center style={{ fontSize: 16, fontWeight: "bold", color: ModelselectedCard === 'Percentage' ? "#fff" : "#000" }}>Percentage</Text>
+        </TouchableOpacity>
+      </Block>
+
+      <Block style={[{marginTop:30}]}>
+        <Block>
+          <Text style={{fontSize:16}}>How much time do you want to charge ?</Text>
+        </Block>
+
+        <Block style={{marginTop:20}}>
+        <Block flex>
+           <Slider
+            maximumValue={30}
+             value={10}
+            onSlidingcomplete={() => console.log("slider")}
+           />
+         </Block>
+
+         <Block style={styles.Space_Between}>
+          <Text style={{fontSize:16}}>0</Text>
+          <Text style={{fontSize:16}}>12hr</Text>
+         </Block>
+          
+        </Block>
+      </Block>
+
+      <Block style={{marginTop:30}}>
+
+        <Block style={[styles.Space_Between]}>
+          <Block style={{flexDirection:"row",alignItems:"center"}}>
+          <MaterialCommunityIcons name="offer" size={24} color="black" />
+            <Text style={{fontSize:13,marginLeft:10}}>Apply Coupon</Text>
+          </Block>
+
+          <Block style={{flexDirection:"row",alignItems:"center"}}>
+            <Text style={{fontSize:13,color:"crimson"}}>View Offers</Text>
+          </Block>
+        </Block>
+
+      </Block>
+
+      <Block style={[{marginTop:30},styles.Space_Between]}>
+        <Block>
+          <Text style={{fontSize:18}}>Estimated Price</Text>
+        </Block>
+
+        <Block>
+          <Text style={{fontSize:18}}>₹ 100.00</Text>
+        </Block>
+      </Block>
+      
+          </TouchableOpacity>
+        </ScrollView>
+         
+         <Block  style={styles.Center}>
+          <Button color="#1B9A8B" onPress={handelChargeStart}  style={{width:"100%"}}>Charge Now</Button>
+         </Block>
+        </View>
+      </Modal>
       
       </ScrollView>
         
@@ -135,6 +277,18 @@ export const ChargerDetail = () => {
 const styles=StyleSheet.create({
   container: {
     flex: 1
+    
+  },
+  viewModelCenter: {
+  
+    justifyContent:'flex-end',
+    margin: 0,
+  },
+  modelSelectedCard:{
+    
+    padding:10,
+    borderRadius:15,
+    backgroundColor:"#1B9A8B",
     
   },
   Subcontainer: {

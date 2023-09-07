@@ -3,9 +3,9 @@ import React from 'react'
 import { Image, StyleSheet } from 'react-native'
 
 export const ChargerInfoCard = (props) => {
-    const{Img,Status,Text1,Text2,StatusColor,bgColor} =props
+    const{Img,Status,Text1,Text2,StatusColor,bgColor,border} =props
   return (
-    <Block style={[{backgroundColor:`${bgColor}`},styles.container]}>
+    <Block style={[{backgroundColor:`${bgColor}`,borderWidth:1,borderColor:border},styles.container]}>
       <Block center style={{flexDirection:"row",justifyContent:"center",alignItems:"center"}}>
         <Image source={Img}></Image>
         <Text style={{color:`${StatusColor}`,marginLeft:10,fontWeight:"bold",fontSize:16}}>{Status}</Text>

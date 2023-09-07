@@ -29,6 +29,8 @@ import { ChargingComplete } from "./Pages/Charging/ChargingComplete";
 import { PaymentSuccessfull } from "./Pages/Payment/PaymentSuccessfull";
 import { Receipt } from "./Pages/Payment/Receipt";
 import { Search } from "./Pages/Search/Search";
+import { SelectVehicle } from "./Pages/SelectVehicle/SelectVehicle";
+import { MapProvider } from "./Context/MapContext";
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -95,8 +97,27 @@ const Tabs = ({navigation}) => {
       />
 
       <Tab.Screen
-        name="Trips"
+        name="Profile"
         component={Profile }
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="person" size={size} color={color} />
+            
+          ),
+          
+        }}
+        listeners={{
+          tabPress: (e) => {
+            // e.preventDefault();
+            handleTabPress(e,'Trips');
+          },
+        }}
+        
+       
+      />
+      <Tab.Screen
+        name="Trips"
+        component={Trips }
         options={{
           tabBarIcon: ({ color, size }) => (
             <Entypo name="line-graph" size={size} color={color} />
@@ -204,6 +225,7 @@ export default function App() {
   
   return (
     <AppProvider>
+      <MapProvider>
 <NavigationContainer onLayout={onLayoutRootView}>
       {
        isAppFirstLaunched !== null && Auth !== null &&
@@ -232,6 +254,7 @@ export default function App() {
           component={Search}
           
         />
+        <Stack.Screen name="SelectVehicle" component={SelectVehicle} />
        <Stack.Screen name="ChargerDetail" component={ChargerDetail} />
        <Stack.Screen name="Charging" component={Charging} />
        <Stack.Screen name="ChargingComplete" component={ChargingComplete} />
@@ -245,6 +268,7 @@ export default function App() {
       }
      
     </NavigationContainer>
+    </MapProvider>
     </AppProvider>
     
   );

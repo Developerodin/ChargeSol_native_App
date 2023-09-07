@@ -33,8 +33,9 @@ import Modal from "react-native-modal";
 import { AntDesign } from '@expo/vector-icons'; 
 import { FilterCard } from "../../Components/Cards/filterCard";
 import { Radio } from 'galio-framework';
-
-
+import { Fontisto } from '@expo/vector-icons'; 
+import { useMapContext } from "../../Context/MapContext";
+import { FontAwesome } from '@expo/vector-icons'; 
 
 const { width, height } = Dimensions;
 const InitialChargerData = [
@@ -173,6 +174,8 @@ export const Home = ({ navigation }) => {
     setMarkerModalVisible,
     isLoggedIn,
   } = useAppContext();
+
+  const {goToUserLocation} = useMapContext()
   const [ChargerVisible, setChargerVisible] = useState(false);
   const [filterModel, setFilterModel] = useState(false);
   const handelChargerModelClose = () => {
@@ -189,7 +192,7 @@ export const Home = ({ navigation }) => {
   const handelAutoChargerEnabelFilter=()=>{
     console.log("Auto Charger")
   }
-
+  
   useEffect(() => {
     console.log("In Home ");
   }, []);
@@ -202,7 +205,7 @@ export const Home = ({ navigation }) => {
         <Block style={styles.Space_Between}>
           <CarComanyCard
             Icon={tatalogo}
-            Title={"TATA Power"}
+            Title={"TATA MOTORS"}
             Color={"#fff"}
             bgColor="#1B9A8B"
           />
@@ -219,7 +222,8 @@ export const Home = ({ navigation }) => {
               },
             ]}
           >
-            <Ionicons onPress={handelFilterModelOpen} name="md-color-filter-outline" size={28} color="white" />
+            <Fontisto onPress={()=>handelFilterModelOpen()} name="equalizer" size={20} color="white" />
+            
           </Block>
         </Block>
       </Block>
@@ -257,6 +261,28 @@ export const Home = ({ navigation }) => {
         </Block>
       )}
 
+      
+     <Block style={{flexDirection:"row",justifyContent:"flex-end",padding:10,position:"absolute",bottom:180,width:"100%"}}>
+     <Block
+           
+            style={[
+              styles.Center,
+              {
+                backgroundColor: "#1B9A8B",
+                width: 40,
+                height: 40,
+                borderRadius: 12,
+                
+              },
+            ]}
+          >
+            <FontAwesome onPress={()=>goToUserLocation()} name="location-arrow" size={20} color="white"/>
+        
+            
+          </Block>
+     </Block>
+
+
       <Modal
         propagateSwipe
         
@@ -284,7 +310,7 @@ export const Home = ({ navigation }) => {
 
 
         <ScrollView horiztonal>
-          <TouchableOpacity>
+          <TouchableOpacity activeOpacity={1}>
          
         <Block style={{marginTop:30}}>
             <Block>
@@ -294,7 +320,7 @@ export const Home = ({ navigation }) => {
             <Block style={{marginTop:10}}>
             <CarComanyCard
             Icon={tatalogo}
-            Title={"TATA Power"}
+            Title={"TATA MOTORS"}
             Color={"#fff"}
             bgColor="#1B9A8B"
           />
@@ -330,7 +356,24 @@ export const Home = ({ navigation }) => {
                 </Block>
                 
               </Block>
+              
             </Block>
+          </Block>
+
+          <Block style={{borderTopWidth:0.2,marginTop:20,borderColor:"gray"}}>
+            <Block style={{marginTop:10}}>
+            <Text style={{fontSize:14,fontWeight:500}}>Status</Text>
+            <Block style={{flexDirection:"row",marginTop:10}}>
+              <Block style={{margin:10}}>
+              <FilterCard title="Active"/>
+              </Block>
+           
+              <Block style={{margin:10}}>
+              <FilterCard title="Inactive"/>
+              </Block>
+            </Block>
+            </Block>
+            
           </Block>
 
           <Block style={{borderTopWidth:0.2,marginTop:20,borderColor:"gray"}}>

@@ -46,6 +46,10 @@ export const Profile = ({navigation}) => {
       console.error('Error clearing authentication status:', error);
     }
   };
+
+  const handelAddVehicle=()=>{
+      navigation.navigate("SelectVehicle")
+  }
   return (
     <View style={[styles.container]}>
       
@@ -102,6 +106,9 @@ export const Profile = ({navigation}) => {
             })
           }
   
+  <TouchableOpacity onPress={handelAddVehicle}>
+
+  
   <Block style={[styles.containerCarCard,styles.Space_Around,styles.CardBorder]}>
           
           
@@ -120,7 +127,7 @@ export const Profile = ({navigation}) => {
           
         
         </Block>
-          
+        </TouchableOpacity>
           </View>
   
           <View style={[{marginTop:30},styles.Space_Between]}>
