@@ -8,11 +8,15 @@ import img4 from "../CarImages/TataTigoEv.png";
 import img5 from "../CarImages/MgZ5EV.png";
 import { CarCard } from '../../Components/Cards/CarCard';
 import { useNavigation } from '@react-navigation/native';
+import { useAppContext } from '../../Context/AppContext';
 const { width } = Dimensions.get('screen');
 export const SelectVehicle = () => {
+  const {setAddVehicleData} = useAppContext();
     const navigation= useNavigation()
-   const handelVehicleSelect=()=>{
+   const handelVehicleSelect=(newData)=>{
+    setAddVehicleData(prev => [...prev, newData]);
     navigation.goBack()
+
    }
     const data = [
         {
@@ -46,6 +50,8 @@ export const SelectVehicle = () => {
           CompanyName: "MG",
         },
       ];
+
+
   return (
    <View style={styles.container}>
      <ScrollView>
@@ -55,7 +61,7 @@ export const SelectVehicle = () => {
         {
             data.map((el,index)=>{
                 return(
-                    <TouchableOpacity onPress={handelVehicleSelect}>
+                    <TouchableOpacity key={index} onPress={()=>handelVehicleSelect(el)}>
                            <Block  style={[styles2.container,styles2.Space_Between,styles2.CardBorder]}>
         
         

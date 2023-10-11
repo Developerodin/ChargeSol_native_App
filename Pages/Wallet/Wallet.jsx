@@ -1,6 +1,6 @@
-import { Block,theme,Button ,Text} from 'galio-framework';
+import { Block,theme,Button ,Text, Input} from 'galio-framework';
 import React, { useEffect, useState } from 'react'
-import { Image, ScrollView, StyleSheet, View,Dimensions } from 'react-native'
+import { Image, ScrollView, StyleSheet, View,Dimensions, TouchableOpacity,Share  } from 'react-native'
 import walletcard from '../CarImages/walletcard.png'
 import { SamllCards } from '../../Components/Cards/SamllCards';
 import StarIcon from '../CarImages/StarIcon.png'
@@ -8,34 +8,125 @@ import Exchange from '../CarImages/Exchange.png'
 import Transfer from '../CarImages/Transfer.png'
 import referImg from '../CarImages/referImg.png'
 import copyicon from '../CarImages/copyicon.png'
+import Oval1 from '../CarImages/WelocmeScreen/Oval1.png'
+import Oval2 from '../CarImages/WelocmeScreen/Oval2.png'
+import dp from '../CarImages/profilepic.png'
 import { LoginModel } from '../../Components/LoginModel/LoginModel';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useAppContext } from '../../Context/AppContext';
+import { useNavigation } from '@react-navigation/native';
+import Modal from "react-native-modal";
+import { FontAwesome5 } from '@expo/vector-icons'; 
+import { FontAwesome } from '@expo/vector-icons'; 
 const { width } = Dimensions.get('screen');
 const thumbMeasure = (width - 48 - 32) / 3;
+import { AntDesign } from '@expo/vector-icons'; 
 export const Wallet = () => {
+  const navigaiton = useNavigation()
   const {isLoggedIn,selectedTabs,modalVisible} = useAppContext();
-  
+  const [RechargeModel, setRechargeModel] = useState(false);
+  const [amount, setAmount] = useState('');
+const handelHisotryClick=()=>{
+  navigaiton.navigate("History")
+}
+const handelRechargeClick=()=>{
+  setRechargeModel(true)
+}
+
+const handelOffersClick=()=>{
+  navigaiton.navigate("Offers")
+}
+
+const handleInputChange = (text) => {
+  setAmount(text);
+};
+
+const handelProceedToPay=()=>{
+  setRechargeModel(false)
+  setAmount('');
+}
+
+const handleShare = async () => {
+  try {
+    const result = await Share.share({
+      message: "Hey there ! I've been using the Charge Sol for electric car charging, and it's been great. I thought you might like it too. If you sign up using my referral code, we both get 50 rupee credits in our wallets. Here's my referral code: [ICX59908]. Give it a try and start saving on your electric car charging! Cheers, Akshay",
+    });
+    if (result.action === Share.sharedAction) {
+      // Share was successful
+      console.log('Shared successfully');
+    } else if (result.action === Share.dismissedAction) {
+      // Share was dismissed/cancelled
+      console.log('Share dismissed');
+    }
+  } catch (error) {
+    console.error('Error sharing:', error.message);
+  }
+};
   return (
 
     <View style={[styles.container]}>
  
        <ScrollView style={[styles.container]}>
-       <Block>
-       <Image  source={walletcard}/>
+         
+         <Block style={{flexDirection:"row",alignItems:"center"}}>
+          <Block>
+            <Image style={{width:60,height:60,borderRadius:50}} source={dp} />
+          </Block>
+
+          <Block style={{marginLeft:30}}>
+            <Text style={{fontSize:14}}>Hi, Akshay !</Text>
+            <Text style={{color:"grey",fontSize:12,marginTop:10}}>welcome,back</Text>
+            
+          </Block>
+         </Block>
+
+
+
+       <Block center style={{marginTop:20}}>
+          <Block style={{width:340,height:179,backgroundColor:"#0e3379",borderRadius:15}}>
+            <Block style={{marginTop:30,marginLeft:30}}>
+              <Text style={{fontSize:18,color:"#fff"}}>Wallet</Text>
+              <Text style={{fontSize:24,color:"#fff",marginTop:3,fontWeight:"bold"}}>₹ 12,000</Text>
+            </Block>
+
+            <Block  style={{marginTop:20,marginLeft:30,width:250}}>
+              
+              <Block style={styles.Space_Between}>
+                <Block>
+                <Text style={{color:"#fff",fontSize:12}}>Phone Number</Text>
+                <Text style={{fontSize:14,color:"#fff",marginTop:5}}>+91 9090909090</Text>
+                </Block>
+                
+                <Block>
+                <Text style={{color:"#fff",fontSize:12}}>Member Since</Text>
+                <Text style={{fontSize:14,color:"#fff",marginTop:5}}>03/23</Text>
+                </Block>
+              </Block>
+            </Block>
+          <Image source={Oval2} style={styles.oval2} />
+            <Image source={Oval1} style={styles.oval1} />
+          </Block>
        </Block>
 
-       <Block style={[{marginTop:30,marginLeft:5}]}>
+       <Block style={[{marginTop:20,marginLeft:5}]}>
      
        <Text style={{fontSize:19,fontWeight:700,color:"#4E5053"}}>Functions</Text>
      
        </Block>
 
        <Block style={[{marginTop:10,padding:5},styles.Space_Between]}>
-       <SamllCards Icon={Transfer} text1="" text2="RECHARGE" Color="#F26522" Color2="#727376" />
-       <SamllCards Icon={StarIcon} text1="" text2="OFFERS" Color="#37CE86" Color2="#727376" />
-       <SamllCards Icon={Exchange} text1="" text2="HISTORY" Color="#F26522" Color2="#727376" />
+
+        <TouchableOpacity activeOpacity={0.9} onPress={handelRechargeClick} >
+        <SamllCards Icon={Transfer} text1="" text2="RECHARGE" Color="#F26522" Color2="#727376" />
+        </TouchableOpacity>
       
+        <TouchableOpacity activeOpacity={0.9} onPress={handelOffersClick}>
+       <SamllCards Icon={StarIcon} text1="" text2="OFFERS" Color="#37CE86" Color2="#727376" />
+       </TouchableOpacity>
+
+       <TouchableOpacity activeOpacity={0.9} onPress={handelHisotryClick}>
+       <SamllCards Icon={Exchange} text1="" text2="HISTORY" Color="#F26522" Color2="#727376" />
+       </TouchableOpacity>
      
      </Block>
      <Block style={[{backgroundColor:"#FEF8F6",height:126,marginTop:30,borderRadius:10,zIndex:10,marginBottom:-10},styles.Space_Around]}>
@@ -51,17 +142,18 @@ export const Wallet = () => {
       </Block>
 
       <Block center >
+      <TouchableOpacity activeOpacity={0.8} onPress={handleShare}>
             <Block center style={[{width:width - (theme.SIZES.BASE * 8),backgroundColor:"#F26522",height:60,borderRadius:10},styles.Center]}>
              <Text style={{color:"#FFFF",fontWeight:700,fontSize:20, marginRight:10}}>ICXXXX</Text>
              
              <Image style={[{width:20,height:26}]} source={copyicon}/>
           
             </Block>
-            
+            </TouchableOpacity>
       </Block>
        
        
-      <Block style={[{marginTop:30,marginBottom:100,backgroundColor:"#FFFF",padding:10,height:300,overFlow:"auto"}]}>
+      <Block style={[{marginTop:30,marginBottom:60,backgroundColor:"#FFFF",padding:10,height:300,overFlow:"auto"}]}>
        <Block style={[styles.Space_Between]}>
        <Text>Recent transactions</Text>
        {/* <Text>More</Text> */}
@@ -127,6 +219,103 @@ export const Wallet = () => {
    </ScrollView>
    
        
+   <Modal
+        propagateSwipe
+        
+        // animationType="slide"
+        // transparent={true}
+        isVisible={RechargeModel}
+        onSwipeComplete={() => setRechargeModel(false)}
+        backdropOpacity={0.3}
+        onBackdropPress={()=>setRechargeModel(false)}
+       
+        swipeDirection={["down"]}
+        style={styles.viewModelCenter}
+      >
+        <View style={{flex:0.55,backgroundColor:"#FFFF",borderTopRightRadius:30,borderTopLeftRadius:30,padding:10}}>
+          <Block center style={{marginTop:-22}}>
+          <AntDesign name="minus" size={50} color="grey" />
+          </Block>
+          <Block style={styles.Space_Between}>
+            <Block style={{flexDirection:"row",alignItems:"center"}}>
+            <Text style={{fontSize:20,fontWeight:"bold"}}>Credits</Text>
+            <Block  style={{width:30,height:30,flexDirection:"row", justifyContent:"center",alignItems:"center",marginLeft:5,borderRadius:20,backgroundColor:"#F1F1F1"}}>
+            <FontAwesome name="rupee"  size={17} color="black" />
+            </Block>
+           
+            </Block>
+            
+            <Block style={styles.Center}>
+              <Text style={{color:"grey",fontSize:13}}> 1 credit = 1 INR</Text>
+            </Block>
+           
+          </Block>
+
+
+        <ScrollView horiztonal>
+          <TouchableOpacity activeOpacity={1}>
+        
+
+      <Block style={[{marginTop:30}]}>
+        <Block>
+          <Text style={{fontSize:20,marginLeft:4}}>Amount</Text>
+        </Block>
+
+        <Block style={{marginTop:5}}>
+          <Input
+          style={{ height: 60 }}
+          placeholder='Enter Amount'
+          value={amount}
+          onChangeText={(e)=>handleInputChange(e)}
+          />
+        </Block>
+      </Block>
+
+
+      <Block style={[styles.Space_Around,{marginTop:20}]}>
+        <TouchableOpacity activeOpacity={0.9} onPress={()=>handleInputChange('300')}>
+        <Block  style={{width:80,height:50,borderWidth:0.5,flexDirection:"row", justifyContent:"center",alignItems:"center",marginLeft:5,borderRadius:13,borderColor:"grey"}}>
+      <Text style={{fontWeight:"bold",color:"grey",fontSize:18}}>+300</Text>
+            </Block>
+        </TouchableOpacity>
+
+        <TouchableOpacity activeOpacity={0.9} onPress={()=>handleInputChange('500')}>
+        <Block  style={{width:80,height:50,borderWidth:0.5,flexDirection:"row", justifyContent:"center",alignItems:"center",marginLeft:5,borderRadius:13,borderColor:"grey"}}>
+      <Text style={{fontWeight:"bold",color:"grey",fontSize:18}}>+500</Text>
+            </Block>
+        </TouchableOpacity>
+
+        <TouchableOpacity activeOpacity={0.9} onPress={()=>handleInputChange('1000')}>
+        <Block  style={{width:80,height:50,borderWidth:0.5,flexDirection:"row", justifyContent:"center",alignItems:"center",marginLeft:5,borderRadius:13,borderColor:"grey"}}>
+      <Text style={{fontWeight:"bold",color:"grey",fontSize:18}}>+1000</Text>
+            </Block>
+        </TouchableOpacity>
+      
+
+          
+          
+
+      </Block>
+
+      
+      
+          </TouchableOpacity>
+        </ScrollView>
+        <Block style={styles.Space_Between}>
+          <Block>
+            <Text style={{fontSize:18,letterSpacing: 2}}>Total Price</Text>
+          </Block>
+
+          <Block>
+            <Text style={{fontSize:18,letterSpacing: 2}}>{amount === '' ? " ₹ 0" : `₹ ${amount}.00`} </Text>
+          </Block>
+        </Block>
+         
+         <Block  style={styles.Center}>
+          <Button color="#1B9A8B" onPress={handelProceedToPay}  style={{width:"100%"}}>Proceed to Pay</Button>
+         </Block>
+        </View>
+      </Modal>
      
     
     </View>
@@ -137,8 +326,27 @@ export const Wallet = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding:10
-    
+    padding:10,
+    backgroundColor:"#fff"
+  },
+  viewModelCenter: {
+  
+    justifyContent:'flex-end',
+    margin: 0,
+  },
+  oval2: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    width: 133, // Adjust the size as needed
+    height:103, // Adjust the size as needed
+  },
+  oval1: {
+    position: 'absolute',
+    bottom: -80,
+    right: 0,
+    width: 184, // Adjust the size as needed
+    height:210, // Adjust the size as needed
   },
   containerCarCard:{
     flexDirection:"row",

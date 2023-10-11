@@ -31,6 +31,11 @@ import { Receipt } from "./Pages/Payment/Receipt";
 import { Search } from "./Pages/Search/Search";
 import { SelectVehicle } from "./Pages/SelectVehicle/SelectVehicle";
 import { MapProvider } from "./Context/MapContext";
+import { Recharge } from "./Pages/Wallet/Recharge";
+import { Offers } from "./Pages/Wallet/Offers";
+import { History } from "./Pages/Wallet/History";
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { TripSearch } from "./Pages/Trips/TripSearch";
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -193,11 +198,11 @@ export default function App() {
     const checkAuthAndFirstLaunch = async () => {
        try {
          // Check authentication status
-         const authStatus = await AsyncStorage.getItem('Auth');
+         const authStatus = await AsyncStorage.getItem('Auth') || null;
          setAuth(authStatus === 'true');
  
          // Check if app is launched for the first time
-         const appData = await AsyncStorage.getItem('isAppFirstLaunched');
+         const appData = await AsyncStorage.getItem('isAppFirstLaunched') || null;
          if (appData === null) {
            setIsAppFirstLaunched(true);
            await AsyncStorage.setItem('isAppFirstLaunched', 'false');
@@ -226,6 +231,7 @@ export default function App() {
   return (
     <AppProvider>
       <MapProvider>
+      <GestureHandlerRootView style={{ flex: 1 }}>
 <NavigationContainer onLayout={onLayoutRootView}>
       {
        isAppFirstLaunched !== null && Auth !== null &&
@@ -254,11 +260,19 @@ export default function App() {
           component={Search}
           
         />
-        <Stack.Screen name="SelectVehicle" component={SelectVehicle} />
-       <Stack.Screen name="ChargerDetail" component={ChargerDetail} />
+         <Stack.Screen
+          name="Plan A Trip"
+          component={TripSearch}
+          
+        />
+        <Stack.Screen name="Recharge" component={Recharge} />
+        <Stack.Screen name="Offers" component={Offers} />
+        <Stack.Screen name="History" component={History} />
+        <Stack.Screen name="Select Vehicle" component={SelectVehicle} />
+       <Stack.Screen name="Charger Detail" component={ChargerDetail} />
        <Stack.Screen name="Charging" component={Charging} />
-       <Stack.Screen name="ChargingComplete" component={ChargingComplete} />
-       <Stack.Screen name="PaymentSuccessfull" component={PaymentSuccessfull} />
+       <Stack.Screen name="Charging Complete" component={ChargingComplete} />
+       <Stack.Screen name="Payment Successfull" component={PaymentSuccessfull} />
        <Stack.Screen name="Receipt" component={Receipt} />
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="SignUp" component={SignUp} />
@@ -268,6 +282,7 @@ export default function App() {
       }
      
     </NavigationContainer>
+    </GestureHandlerRootView>
     </MapProvider>
     </AppProvider>
     

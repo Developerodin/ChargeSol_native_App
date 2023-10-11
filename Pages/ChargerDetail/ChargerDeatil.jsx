@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Image,  View,Dimensions, StyleSheet, ScrollView, TouchableOpacity } from 'react-native'
 import Ci from '../CarImages/ChargerStationImg.png'
 import tatalogo from "../CarImages/Tata.png"
-import { Block,theme,Text, Slider } from 'galio-framework'
+import { Block,theme,Text } from 'galio-framework'
 import { CarComanyCard } from '../../Components/Cards/CarComanyCard'
 import { CarCard } from '../../Components/Cards/CarCard'
 import { BorderCard } from '../../Components/Cards/BorderCard'
@@ -27,6 +27,9 @@ import Modal from "react-native-modal";
 import { AntDesign } from '@expo/vector-icons'; 
 import { FilterCard } from '../../Components/Cards/filterCard'
 import { MaterialCommunityIcons } from '@expo/vector-icons'; 
+import axios from 'axios'
+import { Base_Url } from '../../Base_Urls/BaseUrl'
+import Slider from '@react-native-community/slider';
 const {width,height}=Dimensions
 export const ChargerDetail = () => {
   const [ChargeNowButtonShow,setChargeNowButtonShow] = useState(true)
@@ -34,10 +37,20 @@ export const ChargerDetail = () => {
   const [lastClickTime, setLastClickTime] = useState(0);
   const [PriceModel, setPriceModel] = useState(false);
   const [ModelselectedCard, setModelSelectedCard] = useState('Time');
+  const [StartChargingresponse, setStartChargingresponse] = useState(null);
+  const [stopChargingResponse, setstopChargingResponse] = useState(null);
+  const [ongoingChargingTransactions, setongoingChargingTransactions] = useState([]);
+  const [ChargertransactionDetail, setChargertransactionDetail] = useState(null);
+  const [sliderValue, setSliderValue] = useState(10);
   const navigation = useNavigation();
+  const companyId = '3574hgjhgsddjmhsg'; // Replace with your actual CompanyID
+  const transactionId = 13910;
 
+  const onSliderValueChange = (value) => {
+    setSliderValue(value);
+  };
   const handelChargeStart=()=>{
-navigation.navigate("Charging")
+    navigation.navigate("Charging")
   }
 
 
@@ -62,7 +75,69 @@ navigation.navigate("Charging")
     
     
   }
+
+  const StartCharging =async()=>{
+    try {
+      const response = await axios.post(
+        `${Base_Url.Charger}remote-start-transaction`,
+        {
+          cpId: 'CPID001',
+          userId: '+91xxxxxxxxxx',
+          idTag: '',
+          connector_id: 1,
+          mode: 'time',
+          value: 20,
+        }
+      );
+      setStartChargingresponse(response.data);
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  }
+
+  const stopCharging = async () => {
+    try {
+      const response = await axios.post(
+        `${Base_Url.Charger}remote-stop-transaction`,
+        {
+          cpId: '{{charge_point_id}}', // Replace with the actual charge point ID
+          transactionId: '{{transaction_id}}', // Replace with the actual transaction ID
+        }
+      );
+      setstopChargingResponse(response.data);
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
   
+  const fetchOngoingChargingTransactions = async () => {
+    const header ={
+      Authorization: "Token",
+      CompanyId : "akjfakljfka"
+    }
+    try {
+      const response = await axios.get(
+        `https://api.plugeasy.in/api/ev/ongoing?cpid=PE!@#$%`,
+        {header}
+      );
+      setongoingChargingTransactions(response.data);
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
+  const  getTransactionChargingDetails = async () => {
+    try {
+      const response = await axios.get(
+        `https://api.plugeasy.in/api/ev/gen_transaction/${transactionId}?CompanyID=${companyId}`
+      );
+      setChargertransactionDetail(response.data);
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  }
+
+
   return (
     <View style={styles.container}>
       <Block >
@@ -78,7 +153,7 @@ navigation.navigate("Charging")
         <Block style={[{marginTop:20}]}>
         <CarComanyCard Icon={tatalogo} Title={"TATA Power"} Color={"#fff"} bgColor="#1B9A8B"/>
       
-        <BorderCard Title="DC | 60kW" Subtitle="₹ 16/kwh"/>
+        <BorderCard Title="AC | 32kW" Subtitle="₹ 10/unit"/>
 
 
        <Block style={styles.Space_Between}>
@@ -217,21 +292,23 @@ navigation.navigate("Charging")
           <Text style={{fontSize:16}}>How much time do you want to charge ?</Text>
         </Block>
 
-        <Block style={{marginTop:20}}>
-        <Block flex>
-           <Slider
-            maximumValue={30}
-             value={10}
-            onSlidingcomplete={() => console.log("slider")}
-           />
-         </Block>
+        <View style={{ marginTop: 20 }}>
+      <View>
+      <Slider
+        style={{ width:"100%", height: 40 }}
+        minimumValue={0}
+        maximumValue={100}
+        minimumTrackTintColor="#1B9A8B"
+        maximumTrackTintColor="#000000"
+        onValueChange={onSliderValueChange}
+      />
+      </View>
 
-         <Block style={styles.Space_Between}>
-          <Text style={{fontSize:16}}>0</Text>
-          <Text style={{fontSize:16}}>12hr</Text>
-         </Block>
-          
-        </Block>
+      <View style={styles.Space_Between}>
+        <Text style={{ fontSize: 16 }}>0</Text>
+        <Text style={{ fontSize: 16 }}>{sliderValue.toFixed(0)} {ModelselectedCard === "Time" ? "hr" : ModelselectedCard === "Units" ? "unit" : "%" }</Text>
+      </View>
+    </View>
       </Block>
 
       <Block style={{marginTop:30}}>
@@ -255,7 +332,7 @@ navigation.navigate("Charging")
         </Block>
 
         <Block>
-          <Text style={{fontSize:18}}>₹ 100.00</Text>
+          <Text style={{fontSize:18}}>₹ {sliderValue.toFixed(0) * 10}.00</Text>
         </Block>
       </Block>
       

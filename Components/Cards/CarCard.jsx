@@ -1,15 +1,32 @@
 import { Block, Button, Card, Text,theme } from 'galio-framework'
 import React from 'react'
-import { StyleSheet,Dimensions, Image } from 'react-native'
+import { StyleSheet,Dimensions, Image,TouchableOpacity, View } from 'react-native'
 import { materialTheme } from '../../constants/Theme';
 const { width } = Dimensions.get('screen');
 const thumbMeasure = (width - 48 - 32) / 3;
+import { Swipeable } from 'react-native-gesture-handler';
+import { useAppContext } from '../../Context/AppContext';
 export const CarCard = (props) => {
-    
+  const {addVehicleData,setAddVehicleData} = useAppContext();
     const {Icon,Title,Subtitle}=props;
+
+    const handleDelete = (nameToDelete) => {
+      // Filter out the item with the matching name
+      const updatedData = addVehicleData.filter((item) => item.name !== nameToDelete);
+      setAddVehicleData(updatedData);
+    };
+
+    const renderRightActions = () => {
+      return (
+        <TouchableOpacity  style={{flexDirection:"row",justifyContent:"center",alignItems:"center"}} >
+          <Button onPress={()=>handleDelete(Title)} color="crimson" style={[styles.button, styles.shadow]} >Delete</Button>
+        </TouchableOpacity>
+      );
+    };
+
   return (
-    
-       <Block style={[styles.container,styles.Space_Between,styles.CardBorder]}>
+    <Swipeable renderRightActions={renderRightActions}>
+       <View style={[styles.container,styles.Space_Between,styles.CardBorder]}>
         
         
          
@@ -26,9 +43,9 @@ export const CarCard = (props) => {
         </Block>
          
        
-       </Block>
+       </View>
             
-            
+       </Swipeable>     
            
          
   )

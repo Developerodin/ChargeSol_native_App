@@ -36,7 +36,7 @@ export const Welcome = ({navigation}) => {
 </View>
           
         </Block>
-        <StatusBar style="light" />
+        <StatusBar  hidden={true} />
     </View>
   )
 }

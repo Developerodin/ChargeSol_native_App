@@ -12,7 +12,7 @@ const{width,height}= Dimensions
 export const Charging = () => {
   const navigation = useNavigation();
   const handelStopCharging=()=>{
-    navigation.navigate("ChargingComplete")
+    navigation.navigate("Charging Complete")
   }
   return (
     <View style={styles.container}>

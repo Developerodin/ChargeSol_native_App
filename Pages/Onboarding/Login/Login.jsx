@@ -26,7 +26,7 @@ export const Login = ({navigation}) => {
     const [formattedValue, setFormattedValue] = useState("");
     const [errorMessage, setErrorMessage] = useState("")
       const handleLogin = async() => {
-        if (formData.number === '9090909090' && otp === '1234') {
+        if (formData.number === '1234567890' && otp === '1234') {
           // localStorage.setItem("Auth",true)
           try {
             await AsyncStorage.setItem('Auth','true');

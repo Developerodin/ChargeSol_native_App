@@ -14,7 +14,7 @@ export const ChargerCard = (props) => {
 
     const handelChargerCardCLick=()=>{
       console.log("charger Card click")
-      navigation.navigate("ChargerDetail")
+      navigation.navigate("Charger Detail")
     }
   return (
     

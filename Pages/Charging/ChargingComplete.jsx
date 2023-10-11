@@ -13,7 +13,7 @@ export const ChargingComplete = () => {
   const navigation = useNavigation();
 
   const handelPayNow=()=>{
-    navigation.navigate("PaymentSuccessfull")
+    navigation.navigate("Payment Successfull")
   }
   
   return (

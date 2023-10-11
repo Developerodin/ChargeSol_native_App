@@ -16,6 +16,7 @@ import phone from "../CarImages/phone.png"
 import Emission from '../CarImages/Emission.png'
 import ChargingSession from '../CarImages/ChargingSession.png'
 import FrequentChargers from '../CarImages/FrequentChargers.png'
+
 import SavedTrips from '../CarImages/SavedTrips.png'
 import { CarCard } from '../../Components/Cards/CarCard';
 import { Block,theme,Button ,Text} from 'galio-framework';
@@ -26,7 +27,7 @@ import { useAppContext } from '../../Context/AppContext';
 const { width } = Dimensions.get('screen');
 const thumbMeasure = (width - 48 - 32) / 3;
 export const Profile = ({navigation}) => {
-  const {isLoggedIn,setIsLoggedIn,modalVisible,selectedTabs} = useAppContext();
+  const {isLoggedIn,setIsLoggedIn,modalVisible,selectedTabs,addVehicleData,setAddVehicleData} = useAppContext();
 
   const data=[
     {name:"Tata Tiago EV",subtitle:"Mileage range 315 km",img:img4},
@@ -48,8 +49,12 @@ export const Profile = ({navigation}) => {
   };
 
   const handelAddVehicle=()=>{
-      navigation.navigate("SelectVehicle")
+      navigation.navigate("Select Vehicle")
   }
+
+  useEffect(()=>{
+    setAddVehicleData(data)
+  },[])
   return (
     <View style={[styles.container]}>
       
@@ -99,7 +104,7 @@ export const Profile = ({navigation}) => {
   
         <View>
           {
-            data.map((el , index)=>{
+            addVehicleData.map((el , index)=>{
               return (
                  <CarCard key={index} Icon={el.img} Title={el.name} Subtitle={el.subtitle}/>
               )
@@ -137,14 +142,14 @@ export const Profile = ({navigation}) => {
           
           </View>
   
-          <View style={[{marginTop:30},styles.Space_Between]}>
+          {/* <View style={[{marginTop:30},styles.Space_Between]}>
           <SamllCards Icon={ChargingSession} text1="" text2="Charging Session" Color="#1B998B" Color2="#1B998B" />
           <SamllCards Icon={SavedTrips} text1="" text2="Saved Trips" Color="#1B998B" Color2="#1B998B" />
           <Block style={{width:97,height:97}}>
           
           </Block>
           
-          </View>
+          </View> */}
   
           <View style={{marginBottom:60,marginTop:30}}>
             <Button color="#1B998B" style={[styles.button, styles.shadow]} onPress={handleLogout}>Log Out</Button>

@@ -13,6 +13,8 @@ import MapStyle from "./MapStyle.json"
 import { useAppContext } from '../../Context/AppContext';
 import { useMapContext } from '../../Context/MapContext';
 import * as TaskManager from "expo-task-manager";
+import MapViewDirections from 'react-native-maps-directions';
+import { GOOGLE_MAPS_API_KEY } from '../../Config';
 const {width,height} = Dimensions.get("window");
 const ASPECT_RATIO = width / height;
 const latitude_Delta=0.02;
@@ -38,8 +40,8 @@ const customMarkers = [
   // Add more custom markers as needed
 ];
 
-export const MyMap = ({navigation}) => {
-  const {chargerData,setUserLocation,UserLocation,MapRef,setMapRef} = useMapContext()
+export const TripsMap = ({navigation}) => {
+  const {chargerData,setUserLocation,UserLocation,TripMapRef,setTripMapRef,TripsCords} = useMapContext()
   // const [UserLocation, setUserLocation] = useState(false);
 
   const initialRegion2 = {
@@ -52,10 +54,20 @@ export const MyMap = ({navigation}) => {
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
   const [zoomLevel, setZoomLevel] = useState(12);
+  const [directions, setDirections] = useState(null);
   const {selectedMarker, setSelectedMarker,isMarkerModalVisible, setMarkerModalVisible} = useAppContext()
   const mapRef = useRef(null);
   const LOCATION_TASK_NAME = "background-location-task";
 
+  const originCoordinate = {
+    latitude: 26.9124,   // Replace with the actual latitude of your origin
+    longitude: 75.7873, // Replace with the actual longitude of your origin
+  };
+  
+  const destinationCoordinate = {
+    latitude: 27.0000,   // Replace with the actual latitude of your destination
+    longitude: 76.0000, // Replace with the actual longitude of your destination
+  };
   async function getCurrentLocation() {
     let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== 'granted') {
@@ -90,6 +102,40 @@ export const MyMap = ({navigation}) => {
     setMarkerModalVisible(true)
   };
   
+  const handleDirections = async (startPoint,destination) => {
+    try {
+      const origin = {
+        latitude: originCoordinate.latitude,
+        longitude: originCoordinate.longitude,
+      };
+
+      const response = await fetchDirections(origin, destinationCoordinate);
+      setDirections(response);
+    } catch (error) {
+      console.error('Error fetching directions:', error);
+    }
+  };
+
+  const fetchDirections = async (origin, destination) => {
+    try {
+      const apiKey = GOOGLE_MAPS_API_KEY;
+      const apiUrl = `https://maps.googleapis.com/maps/api/directions/json?origin=${origin.latitude},${origin.longitude}&destination=${destination.latitude},${destination.longitude}&key=AIzaSyBKPYoMWGdRfZsZlYwwFC00xx0LAr8snyo`;
+      
+      const response = await fetch(apiUrl);
+      const data = await response.json();
+      console.log("Routes if ====>",data)
+      if (data.routes.length > 0) {
+        console.log("Routes if ====>",data.routes)
+        const route = data.routes[0];
+        return route;
+      } else {
+        throw new Error('No routes found.');
+      }
+    } catch (error) {
+      throw error;
+    }
+  };
+
   // useEffect(() => {
   //   (async () => {
       
@@ -140,12 +186,12 @@ const initialRegion = {
               latitudeDelta: 0.25,
               longitudeDelta: 0.25,
             },
-            pitch: 45, // Tilt angle
-            heading: 0, // Heading angle
-            altitude: 1000, // Altitude
-            zoom: 15, // Zoom level
+            pitch: 45, 
+            heading: 0, 
+            altitude: 1000, 
+            zoom: 15, 
           },
-          { duration: 1000 } // Animation duration in milliseconds
+          { duration: 1000 }
         );
       }
     
@@ -154,7 +200,7 @@ const initialRegion = {
     console.log("in use effect ")
     setTimeout(()=>{
       if (mapRef.current) {
-        setMapRef(mapRef);
+        setTripMapRef(mapRef);
         mapRef.current.animateCamera(
           {
             center: initalRegion,
@@ -212,6 +258,13 @@ const initialRegion = {
       }
     });
   },[])
+
+
+  useEffect(()=>{
+
+    handleDirections(TripsCords.StartPoint,TripsCords.DestinationPoint)
+  
+  },[TripsCords])
   
   return (
       // "apiKey": "AIzaSyBKPYoMWGdRfZsZlYwwFC00xx0LAr8snyo"
@@ -244,7 +297,16 @@ const initialRegion = {
         <Image source={Car} style={{ width: 25, height: 36 }} />
       </Marker>
     )} 
-    {chargerData.map((marker) => (
+     {directions && (
+          <MapViewDirections
+            origin={directions.legs[0].start_location}
+            destination={directions.legs[0].end_location}
+            apikey={"AIzaSyBKPYoMWGdRfZsZlYwwFC00xx0LAr8snyo"}
+            strokeWidth={3}
+            strokeColor="blue"
+          />
+        )}
+    {/* {chargerData.map((marker) => (
       <MarkerAnimated
         key={marker.StaionID}
         coordinate={{
@@ -256,7 +318,7 @@ const initialRegion = {
       >
         <Image source={marker.icon} style={{ width: 25, height: 35 }} />
       </MarkerAnimated>
-    ))}
+    ))} */}
    
   </MapView>
 
