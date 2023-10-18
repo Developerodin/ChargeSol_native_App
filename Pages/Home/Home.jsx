@@ -36,6 +36,9 @@ import { Radio } from 'galio-framework';
 import { Fontisto } from '@expo/vector-icons'; 
 import { useMapContext } from "../../Context/MapContext";
 import { FontAwesome } from '@expo/vector-icons'; 
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Base_Url } from "../../Base_Urls/BaseUrl";
+import axios from "axios";
 
 const { width, height } = Dimensions;
 
@@ -53,6 +56,7 @@ export const Home = ({ navigation }) => {
   const {goToUserLocation} = useMapContext()
   const [ChargerVisible, setChargerVisible] = useState(false);
   const [filterModel, setFilterModel] = useState(false);
+  
   const handelChargerModelClose = () => {
     console.log("Model CLick");
     setChargerVisible(false);
@@ -67,10 +71,69 @@ export const Home = ({ navigation }) => {
   const handelAutoChargerEnabelFilter=()=>{
     console.log("Auto Charger")
   }
+
+  const updateToken =async()=>{
+    const url = `${Base_Url.App}getplugeasytoken`;
+    const authToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImV4YW1wbGVVc2VyIiwiaWF0IjoxNjk3MTc3MDg1fQ.OCowu7BYJBPZFSjDbIJrdfJnGwEYwD-Ue_dFsF5myS8';
+  
+    try {
+      const response = await axios.get(url, {
+        headers: {
+          Authorization: authToken,
+        },
+      });
+  
+      // Handle the response
+      console.log('Response of token in home :', response.data);
+      const data = response.data;
+      AsyncStorage.setItem("PlugEasy_Token", data.plugeasytoken)
+      .then(() => {
+        console.log("Token_App saved successfully");
+      })
+      .catch((error) => {
+        console.error("Error saving Token_App: ", error);
+      });
+      return data.plugeasytoken;
+    } catch (error) {
+      // Handle any errors
+      console.error('Error:', error.message);
+    }
+  }
   
   useEffect(() => {
     console.log("In Home ");
+    AsyncStorage.getItem('Time')
+    .then(async storedTime => {
+      if (storedTime !== null) {
+        // Parse stored time and current time as Date objects
+        const storedTimeDate = new Date(storedTime);
+        const currentTime = new Date();
+  
+        // Calculate the time difference in milliseconds
+        const timeDifference = currentTime - storedTimeDate;
+  
+        // Calculate 3 hours in milliseconds (3 hours * 60 minutes * 60 seconds * 1000 milliseconds)
+        const threeHoursInMillis = 3 * 60 * 60 * 1000;
+  
+        // Compare if the stored time is 3 hours or more ahead of the current time
+        if (timeDifference >= threeHoursInMillis) {
+          // Call the updateToken function if the stored time is 3 hours or more ahead
+          await updateToken();
+        } else {
+          console.log('Stored time is not 3 hours or more ahead of current time.');
+        }
+      } else {
+        // Token not found in AsyncStorage
+        console.log('Time not found in AsyncStorage');
+      }
+    })
+    .catch(error => {
+      console.error('Error retrieving time:', error);
+    });
+
+    
   }, []);
+
   return (
     <View style={styles.container}>
       {/* <Text style={{borderWidth:1,borderColor:"red",zIndex:10,marginTop:30}}>Home Screen</Text> */}

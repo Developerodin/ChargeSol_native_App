@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Image,  View,Dimensions, StyleSheet, ScrollView, TouchableOpacity } from 'react-native'
 import Ci from '../CarImages/ChargerStationImg.png'
 import tatalogo from "../CarImages/Tata.png"
@@ -30,6 +30,8 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import axios from 'axios'
 import { Base_Url } from '../../Base_Urls/BaseUrl'
 import Slider from '@react-native-community/slider';
+import { ToastAndroid } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage'
 const {width,height}=Dimensions
 export const ChargerDetail = () => {
   const [ChargeNowButtonShow,setChargeNowButtonShow] = useState(true)
@@ -38,29 +40,83 @@ export const ChargerDetail = () => {
   const [PriceModel, setPriceModel] = useState(false);
   const [ModelselectedCard, setModelSelectedCard] = useState('Time');
   const [StartChargingresponse, setStartChargingresponse] = useState(null);
-  const [stopChargingResponse, setstopChargingResponse] = useState(null);
+  
   const [ongoingChargingTransactions, setongoingChargingTransactions] = useState([]);
   const [ChargertransactionDetail, setChargertransactionDetail] = useState(null);
-  const [sliderValue, setSliderValue] = useState(10);
+  const [sliderValue, setSliderValue] = useState(0);
+  const [modeOfCharging, setModeOfCharging] = useState("time")
   const navigation = useNavigation();
-  const companyId = '3574hgjhgsddjmhsg'; // Replace with your actual CompanyID
+  const cpId = 'CP123';
+  const userId ='+919694998693';
+  const connector_id = '1';
+  const companyId = '651536095ad1d151264fc5b6'; // Replace with your actual CompanyID
   const transactionId = 13910;
+
+  const [PluEasyToken,setPluEasyToken] = useState("")
+  const [loading,setLoading] = useState(false)
+  const showToast = (text1) => {
+    ToastAndroid.show(text1, ToastAndroid.SHORT);
+  };
 
   const onSliderValueChange = (value) => {
     setSliderValue(value);
   };
-  const handelChargeStart=()=>{
-    navigation.navigate("Charging")
+
+  const StartCharging =async()=>{
+    setLoading(true)
+    const header ={
+      Authorization:PluEasyToken,
+      CompanyId : companyId
+    }
+    try {
+      const response = await axios.post(
+        `${Base_Url.Charger}remote-start-transaction`,
+        {
+          cpId: cpId,
+          userId:userId,
+          idTag: '123080001149',
+          connector_id: connector_id,
+          mode:modeOfCharging,
+          value: sliderValue,
+        },
+        {
+          headers : header
+        }
+      );
+      console.log("Charger Data ===>",response.data )
+      setStartChargingresponse(response.data);
+      setLoading(false)
+      return response.data;
+    } catch (error) {
+      console.error('Error:', error);
+      setLoading(false)
+    }
   }
+  const handelChargeStart=()=>{
+    StartCharging().then((res)=>{
+      console.log("res",res)
 
+      if(res.payload.status === "Accepted"){
+         navigation.navigate("Charging")
+      }
+      else{
+            showToast(res.msg)
+            // navigation.navigate("Charging")
+      }
+      
+    })
 
+    
+  }
   const handelChargeNow=()=>{
     handelsetPriceModelOpen()
     
   }
+
   const handelsetPriceModelOpen = () => {
     setPriceModel(true);
   };
+
   const handelConnectorSelect=(index)=>{
     const now = Date.now();
     if (now - lastClickTime < 300) {
@@ -76,70 +132,65 @@ export const ChargerDetail = () => {
     
   }
 
-  const StartCharging =async()=>{
-    try {
-      const response = await axios.post(
-        `${Base_Url.Charger}remote-start-transaction`,
-        {
-          cpId: 'CPID001',
-          userId: '+91xxxxxxxxxx',
-          idTag: '',
-          connector_id: 1,
-          mode: 'time',
-          value: 20,
-        }
-      );
-      setStartChargingresponse(response.data);
-    } catch (error) {
-      console.error('Error:', error);
-    }
-  }
-
-  const stopCharging = async () => {
-    try {
-      const response = await axios.post(
-        `${Base_Url.Charger}remote-stop-transaction`,
-        {
-          cpId: '{{charge_point_id}}', // Replace with the actual charge point ID
-          transactionId: '{{transaction_id}}', // Replace with the actual transaction ID
-        }
-      );
-      setstopChargingResponse(response.data);
-    } catch (error) {
-      console.error('Error:', error);
-    }
-  };
-  
   const fetchOngoingChargingTransactions = async () => {
     const header ={
-      Authorization: "Token",
-      CompanyId : "akjfakljfka"
+      Authorization:PluEasyToken,
+      CompanyId : companyId
     }
     try {
       const response = await axios.get(
-        `https://api.plugeasy.in/api/ev/ongoing?cpid=PE!@#$%`,
-        {header}
+        `https://api.plugeasy.in/api/ev/ongoing?cpid=${cpId}`,
+        {
+          headers : header
+        }
       );
       setongoingChargingTransactions(response.data);
+      return response.data;
     } catch (error) {
       console.error('Error:', error);
     }
   };
 
   const  getTransactionChargingDetails = async () => {
+    const header ={
+      Authorization:PluEasyToken,
+      CompanyId : companyId
+    }
     try {
       const response = await axios.get(
-        `https://api.plugeasy.in/api/ev/gen_transaction/${transactionId}?CompanyID=${companyId}`
+        `https://api.plugeasy.in/api/ev/gen_transaction/${transactionId}?CompanyID=${companyId}`,
+        {
+          headers : header
+        }
       );
       setChargertransactionDetail(response.data);
+      return response.data;
     } catch (error) {
       console.error('Error:', error);
     }
   }
 
+  useEffect(()=>{
+    AsyncStorage.getItem('PlugEasy_Token')
+    .then(token => {
+      if (token !== null) {
+        // Token is available, you can use it
+        console.log('Token:', token);
+        setPluEasyToken(token)
+      } else {
+        // Token not found
+        console.log('Token not found in AsyncStorage');
+      }
+    })
+    .catch(error => {
+      console.error('Error retrieving token:', error);
+    });
+  },[])
+
 
   return (
     <View style={styles.container}>
+      
       <Block >
       <Image source={Ci}  style={{width:width}}></Image>
       </Block>
@@ -147,7 +198,7 @@ export const ChargerDetail = () => {
       <ScrollView style={styles.Subcontainer}>
         <Block style={{flexDirection:"row"}}>
            <Text style={{fontSize:11,borderRadius:7,backgroundColor:"#37CE86",color:"#FFFF",width:19.71,height:19.71,textAlign:"center",fontWeight:600}}>A</Text>
-            <Text style={{fontSize:14,color:"#37CE86",fontWeight:600,marginLeft:8}}> Available</Text>
+            <Text style={{fontSize:14,color:"#37CE86",fontWeight:600,marginLeft:8}}>Available</Text>
         </Block>
 
         <Block style={[{marginTop:20}]}>
@@ -161,9 +212,9 @@ export const ChargerDetail = () => {
         <ChargerInfoCard Img={Tick} Status="Available"  StatusColor="#37CE86"  Text1="Connector 1" Text2="(CCS-2)" bgColor="#FFFF" border={selectedCard === 0 ? "#37CE86" : "#EFEFEF"}/>
         </TouchableOpacity>
       
-        <TouchableOpacity activeOpacity={0.9} onPress={()=>handelConnectorSelect(1)}>
+        {/* <TouchableOpacity activeOpacity={0.9} onPress={()=>handelConnectorSelect(1)}>
        <ChargerInfoCard Img={ChargingLogo} Status="Charging"  StatusColor="#37CE86"  Text1="Connector 2" Text2="(CCS-2)" bgColor="#EFEFEF"  border={selectedCard === 1 ? "#37CE86" : "#FFFF"}/>
-       </TouchableOpacity>
+       </TouchableOpacity> */}
        </Block>
        
        <BorderCard Title="AC | 7.4kW" Subtitle="₹ 8/kwh"/>
@@ -306,7 +357,7 @@ export const ChargerDetail = () => {
 
       <View style={styles.Space_Between}>
         <Text style={{ fontSize: 16 }}>0</Text>
-        <Text style={{ fontSize: 16 }}>{sliderValue.toFixed(0)} {ModelselectedCard === "Time" ? "hr" : ModelselectedCard === "Units" ? "unit" : "%" }</Text>
+        <Text style={{ fontSize: 16 }}>{sliderValue.toFixed(0)} {ModelselectedCard === "Time" ? "min" : ModelselectedCard === "Units" ? "unit" : "%" }</Text>
       </View>
     </View>
       </Block>
@@ -340,7 +391,7 @@ export const ChargerDetail = () => {
         </ScrollView>
          
          <Block  style={styles.Center}>
-          <Button color="#1B9A8B" onPress={handelChargeStart}  style={{width:"100%"}}>Charge Now</Button>
+          <Button color="#1B9A8B" onPress={handelChargeStart} loading={loading}  style={{width:"100%"}}>Charge Now</Button>
          </Block>
         </View>
       </Modal>

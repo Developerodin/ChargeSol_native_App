@@ -16,9 +16,18 @@ export const ChargerCard = (props) => {
       console.log("charger Card click")
       navigation.navigate("Charger Detail")
     }
+
+    const ChargeUnavailabel =()=>{
+      console.log("Charger is not availabel ")
+    }
   return (
     
-       <TouchableOpacity activeOpacity={0.8}  onPress={handelChargerCardCLick}   style={[styles.container,styles.Space_Between]} >
+       <TouchableOpacity activeOpacity={0.8}  onPress={()=>{
+        if(ChargerData.Status){
+          return handelChargerCardCLick()
+        }
+        ChargeUnavailabel()
+        }}   style={[styles.container,styles.Space_Between]} >
         
         <Block>
           <Block>
@@ -26,10 +35,10 @@ export const ChargerCard = (props) => {
             <Text style={{marginTop:10,fontWeight:400}}>{ChargerData.Place}</Text>
           </Block>
           <Block style={[{marginTop:10,flexDirection:"row"}]}>
-          <Block  style={[{backgroundColor:"green",width:22,height:22,borderRadius:5},styles.Center]}>
-            <Text style={{color:"#FFF"}}>A</Text>
+          <Block  style={[{backgroundColor:`${ChargerData.Status ? "green" : "crimson"}`,width:22,height:22,borderRadius:5},styles.Center]}>
+            <Text style={{color:"#FFF"}}>{ChargerData.Status ? "A" : "U"}</Text>
             </Block>
-            <Text style={{color:"green",marginLeft:5,fontWeight:"bold"}}>{ChargerData.Status}</Text>
+            <Text style={{color:`${ChargerData.Status ? "green" : "crimson"}`,marginLeft:5,fontWeight:"bold"}}>{ChargerData.Status ? "Available" : "Unavailable"}</Text>
           </Block>
         </Block>
         <Block>

@@ -26,6 +26,7 @@ export const Wallet = () => {
   const {isLoggedIn,selectedTabs,modalVisible} = useAppContext();
   const [RechargeModel, setRechargeModel] = useState(false);
   const [amount, setAmount] = useState('');
+  const [userDetails,setUserDetails] = useState(null);
 const handelHisotryClick=()=>{
   navigaiton.navigate("History")
 }
@@ -62,6 +63,24 @@ const handleShare = async () => {
     console.error('Error sharing:', error.message);
   }
 };
+
+useEffect(()=>{
+  
+  AsyncStorage.getItem('userDetails')
+.then(userDetailsString => {
+  if (userDetailsString) {
+    // Parse the JSON string back to an object
+    const userDetails = JSON.parse(userDetailsString);
+    console.log('User details retrieved: ', userDetails);
+    setUserDetails(userDetails);
+  } else {
+    console.log('User details not found in AsyncStorage');
+  }
+})
+.catch(error => {
+  console.error('Error retrieving user details: ', error);
+});
+},[])
   return (
 
     <View style={[styles.container]}>
@@ -74,7 +93,7 @@ const handleShare = async () => {
           </Block>
 
           <Block style={{marginLeft:30}}>
-            <Text style={{fontSize:14}}>Hi, Akshay !</Text>
+            <Text style={{fontSize:14}}>Hi, {userDetails !== null && userDetails.name } !</Text>
             <Text style={{color:"grey",fontSize:12,marginTop:10}}>welcome,back</Text>
             
           </Block>
@@ -94,7 +113,7 @@ const handleShare = async () => {
               <Block style={styles.Space_Between}>
                 <Block>
                 <Text style={{color:"#fff",fontSize:12}}>Phone Number</Text>
-                <Text style={{fontSize:14,color:"#fff",marginTop:5}}>+91 9090909090</Text>
+                <Text style={{fontSize:14,color:"#fff",marginTop:5}}>+91 {userDetails !== null && userDetails.phone_number }</Text>
                 </Block>
                 
                 <Block>

@@ -28,7 +28,7 @@ const { width } = Dimensions.get('screen');
 const thumbMeasure = (width - 48 - 32) / 3;
 export const Profile = ({navigation}) => {
   const {isLoggedIn,setIsLoggedIn,modalVisible,selectedTabs,addVehicleData,setAddVehicleData} = useAppContext();
-
+  const [userDetails,setUserDetails] = useState(null);
   const data=[
     {name:"Tata Tiago EV",subtitle:"Mileage range 315 km",img:img4},
     {name:"MG Z5 EV",subtitle:"Mileage range 315 km",img:img5},
@@ -39,6 +39,8 @@ export const Profile = ({navigation}) => {
     console.log("logout")
     try {
       await AsyncStorage.removeItem('Auth');
+      await AsyncStorage.removeItem('userDetails');
+      await AsyncStorage.removeItem('Token_App');
       setIsLoggedIn(false)
       // await AsyncStorage.removeItem('isAppFirstLaunched'); // Remove authentication status
       navigation.navigate('Login');
@@ -53,7 +55,21 @@ export const Profile = ({navigation}) => {
   }
 
   useEffect(()=>{
-    setAddVehicleData(data)
+    setAddVehicleData(data);
+    AsyncStorage.getItem('userDetails')
+  .then(userDetailsString => {
+    if (userDetailsString) {
+      // Parse the JSON string back to an object
+      const userDetails = JSON.parse(userDetailsString);
+      console.log('User details retrieved: ', userDetails);
+      setUserDetails(userDetails);
+    } else {
+      console.log('User details not found in AsyncStorage');
+    }
+  })
+  .catch(error => {
+    console.error('Error retrieving user details: ', error);
+  });
   },[])
   return (
     <View style={[styles.container]}>
@@ -74,16 +90,16 @@ export const Profile = ({navigation}) => {
             <View style={{marginLeft:25,marginTop:10}} >
               {/* User Info */}
               <View style={styles.Space_Between}>
-                <Text style={{ fontSize: 20, color: '#4E5053' }}>Akshay</Text>
+                <Text style={{ fontSize: 20, color: '#4E5053' }}>{userDetails !== null && userDetails.name }</Text>
                 <Image  source={editgray}/>
               </View>
               <View style={{ flexDirection: 'row', marginTop: 12, alignItems: 'center' }}>
                 <Image source={Atsymbol} />
-                <Text style={{ fontSize: 14, color: '#B9B9B9', marginLeft: 6 }}>ronakvaya@gmail.com</Text>
+                <Text style={{ fontSize: 14, color: '#B9B9B9', marginLeft: 6 }}>test@gmail.com</Text>
               </View>
               <View style={{ flexDirection: 'row', marginTop: 12, alignItems: 'center' }}>
                 <Image source={phone} />
-                <Text style={{ fontSize: 14, color: '#B9B9B9', marginLeft: 6 }}>+91 9090909090</Text>
+                <Text style={{ fontSize: 14, color: '#B9B9B9', marginLeft: 6 }}>{userDetails !== null && userDetails.phone_number }</Text>
               </View>
             </View>
           

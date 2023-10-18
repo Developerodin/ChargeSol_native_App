@@ -3,6 +3,8 @@ import { View, TextInput, StyleSheet, Image, ScrollView,Dimensions } from 'react
 import bg from "../Images/LoginBG.png"
 import {  Block, Text, Input, theme,Button} from 'galio-framework';
 import PhoneInput from "react-native-phone-number-input";
+import { Base_Url } from '../../../Base_Urls/BaseUrl';
+import axios from 'axios';
 const { width,height} = Dimensions.get('screen');
 export const SignUp = ({navigation}) => {
 
@@ -20,21 +22,52 @@ export const SignUp = ({navigation}) => {
   const [showMessage, setShowMessage] = useState(false);
   const phoneInput = useRef(null);
   const [formData, setFormData] = useState(initalValues);
+  const [Loading,setLoading] = useState(false);
 
-  const handelSignup=()=>{
-    
+  const handelSignup=async()=>{
+    setLoading(true)
     const checkValid = phoneInput.current?.isValidNumber(value);
-              setShowMessage(true);
-              setValid(checkValid ? checkValid : false);
+    
+    setValid(checkValid ? checkValid : false);
+    console.log("handelSignup",value,formData);
+    if(!checkValid || formData.password !== formData.confirm_password){
+      setShowMessage(true);
+      setLoading(false)
+      return ;             
+    }
+    setShowMessage(false);
+    try{
+      
+      const res = await axios.post(`${Base_Url.App}customers/signup`, 
+      {
+        name:formData.name,
+        email: "",
+        phone_number:value ,
+        password:formData.password,
+        cpoId:"64afa5e0720c21517f1b1844",
+      }
+      
+      )
+      console.log("In try")
 
-              console.log("handelSignup",formattedValue,formData);
-              setFormData(initalValues);
-              setFormattedValue("");
-              setValue("")
-              setValid(false);
-              setShowMessage(false);
-
-              navigation.navigate('Login');
+      console.log("res cpo add ==>",res.data.data)
+      if(res.data){
+        setFormData(initalValues);
+        setFormattedValue("");
+        setValue("")
+        setValid(false);
+        setShowMessage(false);
+        setLoading(false)
+        navigation.navigate('Login');
+      }
+  }
+  catch(err){
+     console.log("error in user adding",err)
+     setLoading(false);
+  }
+    
+   
+              
   }
 
   const handleInputChange = (field, value) => {
@@ -63,11 +96,7 @@ export const SignUp = ({navigation}) => {
         textInputStyle={styles.inputText}
         textContainerStyle={{backgroundColor: '#fff'}}
           />
-          {showMessage && (
-            <View style={styles.message}>
-              <Text>Valid : {valid ? "true" : "false"}</Text>
-            </View>
-          )}
+         
 
          <TextInput
         style={styles.input}
@@ -81,7 +110,7 @@ export const SignUp = ({navigation}) => {
         secureTextEntry
         value={formData.password}
         onChangeText={(value) => handleInputChange('password', value)}
-        
+        maxLength={4}
       />
 
       <TextInput
@@ -90,11 +119,17 @@ export const SignUp = ({navigation}) => {
         secureTextEntry
         value={formData.confirm_password}
         onChangeText={(value) => handleInputChange('confirm_password', value)}
-        
+        maxLength={4}
       />
       <Block style={styles.AlignCenter}>
       <Text style={{color:"grey",fontSize:10,marginBottom:20}}>By tapping on 'Sign Up' , you agree to the Terms of Use and Privacy Policy</Text>
-      <Button  onPress={handelSignup} color="#2DA194" style={{ width:"85%" }} >Sign Up</Button>
+      
+      {showMessage && (
+            <View style={styles.message}>
+              <Text style={{ color: 'red' }}>Invalid fields. Try Again!</Text>
+            </View>
+          )}
+      <Button  onPress={handelSignup} loading={Loading} color="#2DA194" style={{ width:"85%" }} >Sign Up</Button>
       
       </Block>
       

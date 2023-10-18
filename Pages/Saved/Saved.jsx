@@ -10,6 +10,7 @@ import DcIcon from "../CarImages/images/dcicon.png"
 import { LoginModel } from '../../Components/LoginModel/LoginModel';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useAppContext } from '../../Context/AppContext';
+import { useMapContext } from '../../Context/MapContext';
 
 const { width,height } = Dimensions.get('screen');
 const thumbMeasure = (width - 48 - 32) / 3;
@@ -26,14 +27,14 @@ const InitialChargerData=[
 export const Saved = () => {
   const [Data,setData]= useState(InitialChargerData);
   const {isLoggedIn,modalVisible,selectedTabs} = useAppContext();
- 
+  const {chargerData} = useMapContext()
   return (
     <View style={[styles.container]}>
       
         <ScrollView style={[styles.container]}>
       <Block style={{marginBottom:90}}>
         {
-          Data.map((el,index)=>{
+          chargerData.map((el,index)=>{
              return (
               <ChargerCard key={index}  ChargerData={el} SICON={Sicon} TIocn={TataIcon} AC={AcIcon} DC={DcIcon} Star={star}/>
              )

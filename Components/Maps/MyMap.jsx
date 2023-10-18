@@ -43,8 +43,8 @@ export const MyMap = ({navigation}) => {
   // const [UserLocation, setUserLocation] = useState(false);
 
   const initialRegion2 = {
-    latitude:26.9124,
-    longitude:75.7873,
+    latitude:26.78133114154805,
+    longitude:75.87922824062501,
     latitudeDelta:0.25,
     longitudeDelta:0.25,
   }
@@ -118,8 +118,8 @@ export const MyMap = ({navigation}) => {
   // } else if (location) {
   //   text = JSON.stringify(location);
 const initialRegion = {
-    latitude:20.5937,
-    longitude:78.9629,
+    latitude:26.78133114154805,
+    longitude:75.87922824062501,
     latitudeDelta:30,
     longitudeDelta:30,
   }
